@@ -1,0 +1,857 @@
+<title>Trits, Spikes & Phonons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
+
+<style>
+/* ----- MethodLM-themed: ember on near-black, glassy panels, ledger-tape ----- */
+:root{
+  --vac:#0a0603;
+  --vac2:#150b04;
+  --panel:rgba(34,20,9,.62);
+  --raise:rgba(48,28,13,.55);
+  --edge:rgba(255,150,60,.16);
+  --edge2:rgba(255,150,60,.34);
+  --ink:#ffece0;
+  --soft:#e6b98f;
+  --faint:#a5744a;
+  --ember:#ff7518;
+  --ember-bright:#ff9d3c;
+  --gold:#ffca3a;
+  --amber:#ff8c1a;
+  --red:#ff4d3d;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --glow:0 0 16px rgba(255,120,25,.26);
+  --shadow:0 1px 0 rgba(255,180,120,.05),0 22px 48px -26px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 520px at 78% -8%, rgba(255,120,25,.10), transparent 60%),
+    radial-gradient(900px 600px at 0% 100%, rgba(255,90,26,.06), transparent 55%),
+    var(--vac);
+  background-attachment:fixed;
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(255,120,25,.32);color:#fff}
+a{color:inherit}
+h1,h2,h3{font-weight:600;text-wrap:balance;margin:0}
+p{margin:0}
+
+.mono{font-family:var(--mono)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.prose{max-width:660px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,rgba(10,6,3,.92),rgba(10,6,3,.66));
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--edge);
+}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:54px}
+.brand{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;font-weight:600;color:var(--ink)}
+.brand .dim{color:var(--faint);font-weight:400}
+.topnav{display:flex;gap:20px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+.topnav a{color:var(--soft);text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;transition:color .15s,border-color .15s,text-shadow .15s}
+.topnav a:hover,.topnav a:focus-visible{color:var(--ember-bright);border-color:var(--ember);text-shadow:0 0 12px rgba(255,157,60,.5)}
+.topnav a:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
+@media(max-width:760px){.topnav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;border-bottom:1px solid var(--edge);overflow:hidden}
+.hero .wrap{position:relative;z-index:2;padding-top:84px;padding-bottom:66px}
+#raster{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.6}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ember-bright);font-weight:600;
+}
+.hero h1{
+  font-family:var(--mono);
+  font-weight:600;
+  font-size:clamp(1.9rem,4.4vw,3.15rem);
+  line-height:1.08;
+  letter-spacing:-.02em;
+  margin:20px 0 0;
+  max-width:15ch;
+  color:#fff;
+}
+.hero h1 em{font-style:normal;color:var(--ember-bright);text-shadow:0 0 26px rgba(255,120,25,.45)}
+.hero .lede{margin-top:22px;max-width:52ch;font-size:1.06rem;color:var(--soft)}
+.statstrip{
+  margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--edge);border-radius:14px;overflow:hidden;
+  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
+}
+.statstrip div{padding:17px 18px;border-right:1px solid var(--edge)}
+.statstrip div:last-child{border-right:0}
+.statstrip .n{font-family:var(--mono);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink)}
+.statstrip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:5px}
+@media(max-width:640px){
+  .statstrip{grid-template-columns:repeat(2,1fr)}
+  .statstrip div:nth-child(2){border-right:0}
+  .statstrip div:nth-child(1),.statstrip div:nth-child(2){border-bottom:1px solid var(--edge)}
+}
+
+/* ---------- section scaffold ---------- */
+section{border-bottom:1px solid var(--edge);padding:66px 0}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.sec-tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ember-bright);font-weight:600;white-space:nowrap;
+}
+.sec-count{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:auto;letter-spacing:.04em}
+h2.sec-title{font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.015em;margin:6px 0 0;color:var(--ink)}
+.sec-intro{margin-top:14px;color:var(--soft);max-width:64ch}
+
+/* ---------- narrative ---------- */
+.narr{padding-top:66px}
+.narr h3{
+  font-family:var(--mono);font-size:.95rem;font-weight:700;
+  letter-spacing:.01em;margin:34px 0 10px;color:var(--ember-bright);
+}
+.narr h3:first-of-type{margin-top:26px}
+.narr p+p{margin-top:14px}
+.narr .prose{color:var(--soft)}
+.narr .prose strong{color:var(--ink);font-weight:600}
+.epigraph{
+  margin:30px 0 6px;padding:20px 26px;border-left:2px solid var(--ember);
+  background:var(--panel);backdrop-filter:blur(9px);border-radius:0 12px 12px 0;
+}
+.epigraph p{font-family:var(--serif);font-size:1.12rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.epigraph .attr{font-family:var(--mono);font-style:normal;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:10px}
+.callout{
+  margin-top:28px;padding:16px 18px;border:1px dashed var(--edge2);border-radius:12px;
+  font-size:.9rem;color:var(--soft);background:var(--raise);
+}
+.callout b{font-family:var(--mono);color:var(--ember-bright);font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:4px}
+.timeline{margin-top:24px;display:grid;gap:0;border-top:1px solid var(--edge)}
+.timeline .row{display:grid;grid-template-columns:92px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid var(--edge)}
+.timeline .when{font-family:var(--mono);font-size:11.5px;color:var(--ember-bright);letter-spacing:.03em;padding-top:2px}
+.timeline .what{color:var(--soft);font-size:.94rem}
+.timeline .what b{color:var(--ink);font-weight:600}
+
+/* ---------- repo grid ---------- */
+.grid{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fill,minmax(276px,1fr));gap:16px}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--panel);backdrop-filter:blur(9px);
+  border:1px solid var(--edge);border-radius:14px;
+  padding:18px 18px 15px;text-decoration:none;color:inherit;
+  transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.card:hover,.card:focus-visible{border-color:var(--edge2);transform:translateY(-3px);box-shadow:var(--glow),var(--shadow)}
+.card:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.card .name{font-family:var(--mono);font-size:.98rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.card:hover .name{color:var(--ember-bright)}
+.card .meta{
+  margin-top:8px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.03em;
+}
+.card .meta .lang::before{content:"";display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--ember);border-radius:50%;vertical-align:1px;box-shadow:0 0 8px rgba(255,120,25,.6)}
+.card .meta .lock{color:var(--amber)}
+.card .desc{margin-top:11px;font-size:.9rem;line-height:1.5;color:var(--soft);flex:1}
+.card .foot{
+  margin-top:13px;padding-top:10px;border-top:1px solid var(--edge);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);
+}
+.card .foot .arw{color:var(--ember-bright);transition:transform .18s}
+.card:hover .foot .arw{transform:translateX(4px)}
+
+/* ---------- results ledger (methodlm ledger-tape look) ---------- */
+.ledger-scroll{
+  margin-top:30px;overflow-x:auto;border:1px solid var(--edge);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
+}
+table.ledger{width:100%;border-collapse:collapse;min-width:720px}
+.ledger th{
+  text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);font-weight:600;
+  padding:14px 16px;border-bottom:1px solid var(--edge2);white-space:nowrap;
+  background:rgba(14,8,3,.5);
+}
+.ledger td{padding:15px 16px;border-bottom:1px solid var(--edge);vertical-align:top;font-size:.92rem;color:var(--soft)}
+.ledger tr:last-child td{border-bottom:0}
+.ledger tr:hover td{background:rgba(255,120,25,.04)}
+.ledger .finding{font-weight:600;color:var(--ink);max-width:26ch}
+.ledger .domain{font-family:var(--mono);font-size:11px;color:var(--soft);white-space:nowrap}
+.ledger .measure{color:var(--soft);max-width:46ch}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 9px;border:1px solid currentColor;border-radius:999px;white-space:nowrap;
+}
+.pill::before{content:"";width:6px;height:6px;background:currentColor;border-radius:50%;box-shadow:0 0 8px currentColor}
+.pill.confirmed{color:var(--gold)}
+.pill.negative{color:var(--amber)}
+.pill.boundary{color:var(--ember-bright)}
+.pill.open{color:var(--faint)}
+.legend{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px 20px;font-size:.82rem;color:var(--soft)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+
+/* ---------- footer ---------- */
+footer{padding:58px 0 74px}
+footer .prose{color:var(--soft)}
+footer h2{font-family:var(--mono);font-size:1.2rem;font-weight:600;color:var(--ink)}
+footer a.big{
+  display:inline-block;margin-top:18px;font-family:var(--mono);font-size:.95rem;
+  color:var(--ember-bright);text-decoration:none;border-bottom:1px solid var(--ember);padding-bottom:2px;
+  transition:text-shadow .15s;
+}
+footer a.big:hover{text-shadow:0 0 14px rgba(255,157,60,.55)}
+footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
+.disclaimer{margin-top:28px;font-family:var(--mono);font-size:11px;color:var(--faint);line-height:1.7}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">gavin&nbsp;branaa<span class="dim">&nbsp;/&nbsp;tritsystem</span></span>
+    <nav class="topnav">
+      <a href="#origins">Origins</a>
+      <a href="#plants">Plants</a>
+      <a href="#neuro">Neuromorphic</a>
+      <a href="#ternary">Ternary</a>
+      <a href="#phononic">Phononic</a>
+      <a href="#games">Games</a>
+      <a href="#infra">Infrastructure</a>
+      <a href="#results">Results</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <canvas id="raster" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">Independent research &nbsp;·&nbsp; unconventional computing</div>
+    <h1>When does <em>structure</em> actually help a thing compute?</h1>
+    <p class="lede">
+      Two threads &mdash; neuromorphic and phononic &mdash; that keep asking the same
+      question, tested in simulation, on real hardware, inside two games and a
+      from-scratch kernel. Every result measured. Negative results reported as
+      carefully as the positive ones.
+    </p>
+    <div class="statstrip">
+      <div><div class="n">27</div><div class="k">repositories</div></div>
+      <div><div class="n">~600</div><div class="k">commits</div></div>
+      <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
+      <div><div class="n">4</div><div class="k">upstream fixes filed</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="origins" class="narr">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">00 &mdash; Origins &amp; method</span>
+    </div>
+    <h2 class="sec-title">Where this started, and the discipline it runs on</h2>
+
+    <div class="prose">
+      <h3>The starting point</h3>
+      <p>
+        It began with a question about plants. How does a plant actually draw its
+        nutrients up out of the soil &mdash; and would a copper rod driven into the
+        ground change that? Would the <em>shape</em> of the rod matter? Chasing one
+        question &mdash; geometry acting on a physical transport process &mdash; led
+        into physics, and from physics into <strong>topology</strong>: the study of
+        what about a shape stays true when you bend and stretch it. Every thread below
+        is still that same question, wearing different clothes &mdash; the next section
+        is where it actually began.
+      </p>
+
+      <h3>How it compounded</h3>
+      <p>
+        Nothing here is a stack of unrelated side projects. Each piece feeds the next.
+        The spiking runtime built to feed plants became the game-AI engine, then the
+        control logic of a from-scratch operating-system kernel. The measurement discipline worked out in
+        the phononic-reservoir studies became a standalone reasoning harness. The
+        anomaly-detection pattern built by hand for a pond-monitoring tool was extracted
+        into a reusable library the third time it was needed. The same
+        <strong>.spk</strong> brain file runs on Python, C, Verilog and Godot backends
+        without change.
+      </p>
+
+      <div class="timeline">
+        <div class="row"><div class="when">prior</div><div class="what">A question about plants, copper rods, and whether <b>shape</b> matters &mdash; into physics, then topology.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;04</div><div class="what"><b>horde-defense-beta</b> &mdash; the first repo. A game, before any of the research.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>Spikeling</b> and <b>quasicrystal-mems-reservoir</b> created a day apart &mdash; the neuromorphic and phononic threads both open.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; four bug-fixes filed upstream to snntorch, sinabs and tenns-core.</div></div>
+      </div>
+
+      <h3>Teaching myself, in public</h3>
+      <p>
+        There is a repo called <strong>the-playbook</strong> whose entire job is to teach
+        this portfolio back to me from scratch &mdash; every claim tied to a real measured
+        number pulled from the repo it came from, written to <em>defend</em> the work under
+        questioning, not just to recognise it. The learning is structured the same way the
+        research is: a claim is not finished until it survives someone trying to break it.
+      </p>
+
+      <h3>As above, so below</h3>
+      <p>
+        The Hermetic line &mdash; <em>as above, so below</em> &mdash; is the working
+        heuristic, read as an engineering rule rather than a mystical one: if the same
+        structure repeats at every scale, the honest way to build a system is to spread
+        its work across that structure instead of routing everything through one place.
+        A different approach, and it means <strong>no bottleneck</strong>. That reading
+        is why the same move keeps recurring &mdash; a reservoir computes in the modes of
+        a physical medium instead of a processor; the kernel&rsquo;s scheduler <em>is</em>
+        a spiking network rather than a single loop; connectivity comes from a
+        topological rule instead of a stored table; the topology heals itself because
+        nothing sits at a single point of failure.
+      </p>
+
+      <h3>Reporting the losses, in a Stoic manner</h3>
+      <p>
+        The other half is Stoic. A measurement does not care what you hoped for, and the
+        discipline is to report the loss plainly &mdash; no spin, nothing buried, no
+        distress about it. The measured-results ledger below is that practice made
+        literal: every negative result is written in the same voice as every
+        confirmation. <strong>methodlm</strong> compiles the same posture into software
+        &mdash; it states the prediction first, then actively tries to refute what it is
+        about to accept.
+      </p>
+
+      <div class="epigraph">
+        <p>&ldquo;That which is below is like that which is above.&rdquo;</p>
+        <div class="attr">the Emerald Tablet &mdash; read here as an argument against bottleneck systems</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plants" class="narr">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">01 &mdash; Electroculture &amp; the plant machine</span>
+    </div>
+    <h2 class="sec-title">The project was a plant feeder before it was anything else</h2>
+
+    <div class="prose">
+      <h3>It started as a game</h3>
+      <p>
+        The first thing being built here was just a game &mdash;
+        <strong>horde-defense-beta</strong>, waves of enemies, a deck-building creep
+        system, no research attached. The research arrived sideways, out of a gardening
+        question that had nothing to do with games.
+      </p>
+
+      <h3>Copper rods in the soil</h3>
+      <p>
+        The question was how a plant actually moves nutrients up out of the ground, and
+        whether a copper rod driven in beside it changes anything &mdash; the
+        electroculture idea, that a piece of metal and the ambient electric field can
+        shift how a plant grows. The experiments mattered less for a yes-or-no on
+        electroculture than for the thing that kept nagging: the <em>shape</em> of the
+        rod seemed to change the behaviour. Straight rod, coil, bent geometry &mdash;
+        not the same. A question about geometry acting on a physical transport process
+        is a topology question, and that is the door the rest of this walked through.
+      </p>
+
+      <h3>The spiking network was built to feed plants</h3>
+      <p>
+        The SNN did not start as game AI. It was meant to run the garden: watch a plant
+        through sensors, dose the exact right amount of water and nutrient, and &mdash;
+        the part that mattered &mdash; <em>learn</em> each plant&rsquo;s preferences over
+        time, what it responded to and what it didn&rsquo;t, with nobody hand-coding a
+        rule per species. A closed loop that adapts to the thing it is keeping alive.
+      </p>
+
+      <h3>Same controller, different system</h3>
+      <p>
+        That plant feeder became <strong>Spikeling</strong>. The same loop that was
+        supposed to learn a tomato&rsquo;s preferences is the shape you want for an NPC
+        learning a player, and then for a kernel learning its own task queue.
+        <strong>pond-health</strong> is the closest living relative of the original idea
+        &mdash; an SNN watching an environment and flagging trouble before it is visible
+        &mdash; and it is measured honestly against a plain trend model rather than
+        assumed to beat it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="neuro">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">02 &mdash; Neuromorphic core</span>
+      <span class="sec-count">5 repositories</span>
+    </div>
+    <h2 class="sec-title">A spiking-neural-network runtime, and everything built on it</h2>
+    <p class="sec-intro">
+      One engine: write a <code>.spk</code> brain, run it unchanged on four backends.
+      From that engine, a kernel scheduler, a hardware-accelerator study, and a
+      ternary telemetry monitor.
+    </p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/Spikeling">
+        <div class="name">Spikeling</div>
+        <div class="meta"><span class="lang">C · Python · GDScript</span><span>83 commits</span><span>public</span></div>
+        <div class="desc">A DSL + runtime for spiking neural networks. The same <code>.spk</code> file runs on Python, C, Verilog and Godot backends. Ships a Godot game-AI plugin, an MCP server, and a hardware sensor-adapter layer confirmed against real acoustic, telemetry and video devices.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/spikeling-os">
+        <div class="name">spikeling-os</div>
+        <div class="meta"><span class="lang">Rust</span><span>121 milestones</span><span>public</span></div>
+        <div class="desc">A from-scratch x86_64 kernel whose task scheduler <em>is</em> the Spikeling runtime &mdash; an SNN with topological SSH-coupled connectivity as real kernel control logic. Includes an evidence-gated self-healing topology and a growing subset-C compiler with its own on-target test suite.</div>
+        <div class="foot"><span>active 2026 · 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/silicon-mega-accelerator">
+        <div class="name">silicon-mega-accelerator</div>
+        <div class="meta"><span class="lang">Python</span><span>5 commits</span><span>public</span></div>
+        <div class="desc">Hardware-accelerator techniques from the neural-network-on-silicon literature, applied to the Spikeling runtime and tested for correctness and accuracy rather than asserted to help.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/ternary-snn-monitor">
+        <div class="name">ternary-snn-monitor</div>
+        <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
+        <div class="desc">Heterogeneous spiking-neuron anomaly detection plus multi-trit ternary compression, run against live telemetry, CSV replay, a desktop widget and real audio.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/heterogeneous-neuron-ontology">
+        <div class="name">heterogeneous-neuron-ontology</div>
+        <div class="meta"><span class="lang">Python</span><span>public</span></div>
+        <div class="desc">Testing an external &ldquo;heterogeneous compute&rdquo; ontology principle against how a spiking neuron population is actually composed.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="ternary">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">03 &mdash; Ternary &amp; verifiable reasoning</span>
+      <span class="sec-count">3 repositories</span>
+    </div>
+    <h2 class="sec-title">Three-state logic, and a harness that makes claims prove themselves</h2>
+    <p class="sec-intro">
+      Ternary-computing research that shipped a real tool, and a sibling project that
+      holds any reasoning &mdash; human or model &mdash; to a pre-registered, refutation-tested standard.
+    </p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/012-trit-search">
+        <div class="name">012-trit-search / OBSERVE</div>
+        <div class="meta"><span class="lang">Python</span><span>105 commits</span><span>public</span></div>
+        <div class="desc">Ternary-computing research and its shipping product: local, private semantic code search (desktop GUI, CLI, MCP server), one-line install, nothing leaves the machine. Chunk-provenance lineage across commits, hybrid lexical + semantic search, incremental re-indexing.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/methodlm">
+        <div class="name">methodlm</div>
+        <div class="meta"><span class="lang">Python</span><span>14 commits</span><span>public</span></div>
+        <div class="desc">A verifiable causal-reasoning harness. Pre-registers every test, runs real backdoor adjustment with a robustness value, and runs DoWhy-backed refutation &mdash; placebo treatment, random common cause, subset validation &mdash; against each accepted claim. Benchmarked on ten cited public datasets plus this portfolio&rsquo;s own live telemetry.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/llama-demo">
+        <div class="name">llama-demo</div>
+        <div class="meta"><span class="lang">Python</span><span>~7 commits</span><span>public</span></div>
+        <div class="desc">Zero-cost local-model experiments (Ollama) applying the methodlm discipline to LLM tooling &mdash; a coding-agent dispatcher, model vet/quantize/finetune scripts, and honest negatives: a local 7B failed to fix a real bug even when handed the exact correct lesson.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="phononic">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">04 &mdash; Phononic / reservoir computing</span>
+      <span class="sec-count">3 repositories</span>
+    </div>
+    <h2 class="sec-title">Can a vibrating structure compute &mdash; and does its symmetry matter?</h2>
+    <p class="sec-intro">
+      Finite-element studies of micro-mechanical resonators as physical reservoirs.
+      Each one pre-registered; each boundary condition and null result written up as
+      carefully as the wins.
+    </p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/quasicrystal-mems-reservoir">
+        <div class="name">quasicrystal-mems-reservoir</div>
+        <div class="meta"><span class="lang">Python</span><span>3 commits</span><span>public</span></div>
+        <div class="desc">Finite-element study of quasicrystal-perforated MEMS resonators and what their mode structure can &mdash; and cannot &mdash; compute as a physical reservoir. Includes the write-up.</div>
+        <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/symmetry-selection-rule">
+        <div class="name">symmetry-selection-rule</div>
+        <div class="meta"><span class="lang">report</span><span>2 commits</span><span>public</span></div>
+        <div class="desc">A lab report deriving a symmetry selection rule for computation in phononic and quasicrystal MEMS reservoirs &mdash; which modes are available to the readout, and why.</div>
+        <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/topological-phononics">
+        <div class="name">topological-phononics</div>
+        <div class="meta"><span class="lang">Python</span><span>12 commits</span><span>public</span></div>
+        <div class="desc">Does topological structure make an analog SSH reservoir tolerate a dead element? A pre-registered study with a sharp answer and a sharp boundary: the protection holds only while chiral symmetry does, and reverses sign in a physical Duffing model. Includes a Fibonacci-connectivity cost study, scale-characterised N = 50&ndash;10,000.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="games">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">05 &mdash; Games on the spiking engine</span>
+      <span class="sec-count">2 repositories</span>
+    </div>
+    <h2 class="sec-title">Where the research has to survive contact with a player</h2>
+    <p class="sec-intro">
+      The same spiking brain that runs in the kernel drives every agent in these
+      games &mdash; a stress test the benchmark scripts can&rsquo;t provide.
+    </p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/tribe">
+        <div class="name">tribe</div>
+        <div class="meta"><span class="lang">GDScript</span><span>74 commits</span><span>public · 3&#9733;</span></div>
+        <div class="desc">A survival / RTS sim where every NPC &mdash; tribe members, animals, rival AI &mdash; runs a small spiking neural network instead of a behaviour tree. Persistence with offline catch-up, proximity trade and diplomacy, and emergent phase-locking between independent NPC brains driven only by shared drum audio.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/horde-defense-beta">
+        <div class="name">horde-defense-beta</div>
+        <div class="meta"><span class="lang">GDScript</span><span>~12 commits</span><span>public · 1&#9733;</span></div>
+        <div class="desc">The repo that started everything. A 3D horde-defense game with a deck-building creep system &mdash; and the source of the questions the rest of the portfolio went on to chase.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="infra">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">06 &mdash; Production infrastructure</span>
+      <span class="sec-count">3 repositories</span>
+    </div>
+    <h2 class="sec-title">Research tooling, hardened into things people can depend on</h2>
+    <p class="sec-intro">Live, billed, monitored &mdash; not demos.</p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/observe-api">
+        <div class="name">observe-api</div>
+        <div class="meta"><span class="lang">Python</span><span>102 commits</span><span>public</span></div>
+        <div class="desc">A hosted, pay-per-query semantic code-search API for AI agents, plus an ACP- and Google-UCP-compatible agent-commerce discovery and reputation layer &mdash; the cross-merchant discovery gap neither spec actually defines. Real Stripe billing, live deployment behind Caddy + TLS, two-sided reputation from earned agreement between disconnected keys.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/mcp-gateway">
+        <div class="name">mcp-gateway</div>
+        <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
+        <div class="desc">A self-contained, tamper-evident audit log &mdash; hash-chained JSONL &mdash; plus rate limiting for local MCP tool servers. Wired into both OBSERVE&rsquo;s and Spikeling&rsquo;s tool surfaces so every call is logged and bounded. Single-operator scope, no cloud dependency.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/server-guard">
+        <div class="name">server-guard</div>
+        <div class="meta"><span class="lang">Python</span><span>42 commits</span><span>public</span></div>
+        <div class="desc">Real-time server monitoring and alerting, benchmarked head-to-head against Datadog, Wazuh, PagerDuty and Netdata on sourced, cited pricing rather than marketing claims.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="applied">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">07 &mdash; Applied hardware builds</span>
+      <span class="sec-count">3 repositories</span>
+    </div>
+    <h2 class="sec-title">Prototypes for real devices, held to the research standard</h2>
+    <p class="sec-intro">Verify it actually works on the hardware before calling it done.</p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/tritsystem/doorcam">
+        <div class="name">doorcam</div>
+        <div class="meta"><span class="lang">Python</span><span>8 commits</span><span>public</span></div>
+        <div class="desc">A regular USB webcam becomes a driveway monitor: YOLOv8 person / vehicle detection restricted to a hand-drawn boundary, Discord webhook alerts with snapshots, and a live MJPEG feed built for screen-sharing.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/pond-health">
+        <div class="name">pond-health</div>
+        <div class="meta"><span class="lang">Python</span><span>7 commits</span><span>public</span></div>
+        <div class="desc">Predicts pond oxygen crashes and algae blooms before they&rsquo;re visible. A transparent trend model &mdash; no black box, because there&rsquo;s no honest training data yet &mdash; with a Spikeling SNN as a second detector, measured against the trend model rather than assumed better. It never false-alarms but gives no early warning; the trend model does the opposite.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/tritsystem/sensor-duo">
+        <div class="name">sensor-duo</div>
+        <div class="meta"><span class="lang">Python</span><span>6 commits</span><span>public</span></div>
+        <div class="desc">The trend + spiking + SQLite + Grafana anomaly-detection pattern from pond-health, extracted into a reusable toolkit after building it by hand twice. Generic over any named numeric channel, with a normalised schema so a new channel never needs a migration.</div>
+        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="upstream">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
+      <span class="sec-count">4 fixes filed</span>
+    </div>
+    <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s neuromorphic libraries</h2>
+    <p class="sec-intro">
+      Each of these is a real bug found by reading the code carefully, reproduced, and
+      sent upstream with a fix and a test. All four are open and under review &mdash;
+      none merged yet.
+    </p>
+    <div class="grid">
+
+      <a class="card" href="https://github.com/jeshraghian/snntorch/pull/441">
+        <div class="name">snntorch #441</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
+        <div class="desc"><code>LeakyParallel</code> silently ignored a per-neuron <code>beta</code>, collapsing it to a scalar. Fix restores the per-neuron decay and corrects the recurrence.</div>
+        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/jeshraghian/snntorch/pull/443">
+        <div class="name">snntorch #443</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
+        <div class="desc"><code>SpikingNeuron.zeros()</code> was a silent no-op. Fix makes it actually zero the state and keeps it leaf-tensor safe for autograd.</div>
+        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/Brainchip-Inc/tenns-core/pull/1">
+        <div class="name">tenns-core #1</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
+        <div class="desc"><code>SSMLayerInference.reset_state()</code> kept a stale batch dimension, breaking streaming inference after a batch-size change. Fix makes the reset shape-correct.</div>
+        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/synsense/sinabs/pull/336">
+        <div class="name">sinabs #336</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
+        <div class="desc">Membrane potential was read for the layer output before being clipped to <code>min_v_mem</code>. Fix clips first, then emits &mdash; closing issue #236.</div>
+        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">09 &mdash; Measured results</span>
+      <span class="sec-count">the honest ledger</span>
+    </div>
+    <h2 class="sec-title">What the measurements actually showed</h2>
+    <p class="sec-intro">
+      The point of the whole portfolio. A result is logged here whether it went the way
+      it was hoped to or not &mdash; a reported negative is the method working, not the
+      method failing.
+    </p>
+
+    <div class="ledger-scroll">
+      <table class="ledger">
+        <thead>
+          <tr><th>Finding</th><th>Domain</th><th>Verdict</th><th>What was measured</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="finding">Homeostatic threshold adaptation beats a blind &ldquo;breathing&rdquo; rhythm</td>
+            <td class="domain">Spikeling</td>
+            <td><span class="pill confirmed">Confirmed</span></td>
+            <td class="measure">A periodic threshold rhythm was falsified against noise; a closed-loop homeostatic controller then decisively beat both &mdash; deterministic recovery, tighter worst-case latency.</td>
+          </tr>
+          <tr>
+            <td class="finding">SSH reservoir tolerates a dead element &mdash; only while chiral symmetry holds</td>
+            <td class="domain">topological-phononics</td>
+            <td><span class="pill boundary">Boundary</span></td>
+            <td class="measure">Defect-tolerance is real in the idealised SSH model, vanishes when chiral symmetry is broken, and reverses sign in a physical Duffing model. The boundary is the result.</td>
+          </tr>
+          <tr>
+            <td class="finding">Structured noise cancels exactly at the reservoir readout</td>
+            <td class="domain">reservoir / real mics</td>
+            <td><span class="pill confirmed">Confirmed</span></td>
+            <td class="measure">A simulation prediction, then reproduced twice on a real two-microphone rig &mdash; after catching a verdict-printer bug and a spectral-overlap confound. Holds when target and interferer are spectrally separated.</td>
+          </tr>
+          <tr>
+            <td class="finding">Independent NPC brains phase-lock from shared audio alone</td>
+            <td class="domain">tribe / sync-mesh</td>
+            <td><span class="pill confirmed">Confirmed</span></td>
+            <td class="measure">Kuramoto order parameter r rose 0.48 &rarr; 0.94 with no direct communication. Strong on one device; about 10&times; weaker across two separate microphones &mdash; visible only over six trials with lag correction.</td>
+          </tr>
+          <tr>
+            <td class="finding">Fibonacci connectivity as a cheap substitute for stored random wiring</td>
+            <td class="domain">topological-phononics</td>
+            <td><span class="pill negative">Negative</span></td>
+            <td class="measure">A 3-parameter recursive rule vs O(N&sup2;)-stored random connectivity: honest cost of ~1.4&ndash;2&times; on linear recall, ~1&ndash;17% on NARMA10. Smoothly scale-characterised, N = 50&ndash;10,000. Reported, not buried.</td>
+          </tr>
+          <tr>
+            <td class="finding">Ternary-quantising a vision model for edge speedup</td>
+            <td class="domain">ternary vision</td>
+            <td><span class="pill negative">Negative</span></td>
+            <td class="measure">MobileNetV3-Small went 78.8% &rarr; 4.9% accuracy across two independent attempts. A real 13.8&times; disk saving, but zero inference speedup. Ruled out cleanly.</td>
+          </tr>
+          <tr>
+            <td class="finding">One symmetry law unifying the phononic, ternary and acoustic substrates</td>
+            <td class="domain">cross-substrate</td>
+            <td><span class="pill negative">Negative</span></td>
+            <td class="measure">The grand-unification attempt lost when each substrate&rsquo;s real code was measured. Only a narrow winding-invariant rhyme between the phononic and ternary cases survived; acoustic is a separate mechanism.</td>
+          </tr>
+          <tr>
+            <td class="finding">Two-microphone TDOA source localisation on the sync-mesh rig</td>
+            <td class="domain">acoustic localisation</td>
+            <td><span class="pill open">Open</span></td>
+            <td class="measure">Coin-flip accuracy (2 of 4) after fixing three real bugs. Room acoustics vs positioning-consistency vs a remaining bug not yet distinguished. Left open, not spun.</td>
+          </tr>
+          <tr>
+            <td class="finding">SNN-driven SSH-topological task scheduler as real kernel logic</td>
+            <td class="domain">spikeling-os</td>
+            <td><span class="pill confirmed">Confirmed</span></td>
+            <td class="measure">Boots and schedules under an SNN with dimerised coupling; evidence-gated self-healing topology live; 121 milestones, each with an on-target test and a fresh + reused boot check.</td>
+          </tr>
+          <tr>
+            <td class="finding">Baking the reasoning method into small-model weights</td>
+            <td class="domain">llama-demo / method</td>
+            <td><span class="pill confirmed">Confirmed</span></td>
+            <td class="measure">Fine-tuning the method into a 0.5B model&rsquo;s weights beat prompting the same model &mdash; on that small model, the discipline transfers better as training signal than as instructions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:var(--confirmed)"></i>Confirmed &mdash; prediction held under test</span>
+      <span><i style="background:var(--negative)"></i>Negative &mdash; it didn&rsquo;t work, and that&rsquo;s written down</span>
+      <span><i style="background:var(--boundary)"></i>Boundary &mdash; true only inside a stated condition</span>
+      <span><i style="background:var(--open)"></i>Open &mdash; not yet resolved, not overclaimed</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap prose">
+    <h2>The through-line</h2>
+    <p>
+      Two research threads &mdash; neuromorphic and phononic &mdash; both testing when
+      structure and symmetry actually <em>help</em> a system compute. That question
+      doesn&rsquo;t stay theoretical: the same engine drives two games and a kernel
+      scheduler, and the same discipline &mdash; measure it, verify it, report what
+      happened, negatives included &mdash; carries all the way to software people can
+      pay for and depend on.
+    </p>
+    <a class="big" href="https://github.com/tritsystem">github.com/tritsystem &rarr;</a>
+    <p class="disclaimer">
+      Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
+      sum across the 27 repositories listed. Upstream pull requests were open and unmerged
+      at that date &mdash; status is stated as filed, not accepted.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var c = document.getElementById('raster');
+  if(!c) return;
+  var ctx = c.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W, H, lines, reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  function accent(){
+    try { return getComputedStyle(document.documentElement).getPropertyValue('--ember').trim() || '#ff7518'; }
+    catch(e){ return '#ff7518'; }
+  }
+
+  function resize(){
+    W = c.clientWidth; H = c.clientHeight;
+    c.width = W * dpr; c.height = H * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var n = Math.max(5, Math.round(H/44));
+    lines = [];
+    for(var i=0;i<n;i++){
+      lines.push({ y: (i+0.5)*(H/n), spikes: [], rate: 0.006 + Math.random()*0.02 });
+    }
+  }
+
+  function frame(t){
+    ctx.clearRect(0,0,W,H);
+    var col = accent();
+    // baselines
+    ctx.strokeStyle = col; ctx.globalAlpha = 0.10; ctx.lineWidth = 1;
+    for(var i=0;i<lines.length;i++){
+      ctx.beginPath(); ctx.moveTo(0, lines[i].y); ctx.lineTo(W, lines[i].y); ctx.stroke();
+    }
+    // spikes
+    for(var i=0;i<lines.length;i++){
+      var L = lines[i];
+      if(Math.random() < L.rate) L.spikes.push({ x: W + 6, life: 1 });
+      for(var s=L.spikes.length-1;s>=0;s--){
+        var sp = L.spikes[s];
+        sp.x -= 0.9;
+        if(sp.x < -6){ L.spikes.splice(s,1); continue; }
+        ctx.globalAlpha = 0.55 * sp.life;
+        ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(sp.x, L.y - 9); ctx.lineTo(sp.x, L.y + 9); ctx.stroke();
+        ctx.globalAlpha = 0.9 * sp.life;
+        ctx.fillStyle = col;
+        ctx.fillRect(sp.x - 1, L.y - 1, 2, 2);
+      }
+    }
+    ctx.globalAlpha = 1;
+    if(!reduce) raf = requestAnimationFrame(frame);
+  }
+
+  var raf;
+  function start(){
+    resize();
+    if(raf) cancelAnimationFrame(raf);
+    if(reduce){
+      // one static scattered frame
+      for(var k=0;k<lines.length;k++){
+        var m = 3 + Math.floor(Math.random()*5);
+        for(var j=0;j<m;j++) lines[k].spikes.push({ x: Math.random()*W, life: 1 });
+      }
+      frame(0);
+    } else {
+      raf = requestAnimationFrame(frame);
+    }
+  }
+  window.addEventListener('resize', function(){ clearTimeout(window.__rt); window.__rt = setTimeout(start, 150); });
+  start();
+})();
+</script>
