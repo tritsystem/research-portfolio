@@ -250,7 +250,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       <div><div class="n">27</div><div class="k">repositories</div></div>
       <div><div class="n">~600</div><div class="k">commits</div></div>
       <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
-      <div><div class="n">4</div><div class="k">upstream fixes filed</div></div>
+      <div><div class="n">1&nbsp;/&nbsp;4</div><div class="k">upstream fixes merged / filed</div></div>
     </div>
   </div>
 </header>
@@ -296,7 +296,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; four bug-fixes filed upstream to snntorch, sinabs and tenns-core.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; four bug-fixes sent upstream to snntorch, sinabs and tenns-core &mdash; the snnTorch dtype fix merged, three still open.</div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -627,15 +627,22 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">4 fixes filed</span>
+      <span class="sec-count">1 merged &middot; 3 open</span>
     </div>
     <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s neuromorphic libraries</h2>
     <p class="sec-intro">
-      Each of these is a real bug found by reading the code carefully, reproduced, and
-      sent upstream with a fix and a test. All four are open and under review &mdash;
-      none merged yet.
+      Each is a real bug found by reading the code carefully, reproduced, and sent upstream
+      with a root cause and a fix. The first has landed on the library&rsquo;s <code>master</code>;
+      the other three are open and under review.
     </p>
     <div class="grid">
+
+      <a class="card" href="https://github.com/jeshraghian/snntorch/issues/422">
+        <div class="name">snntorch #422 &rarr; #432</div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc">Reported: <code>float64</code> input, but the spike output silently downcast to <code>float32</code> across Leaky / Synaptic / Lapicque &mdash; root-caused to a hardcoded <code>(input_ &gt; 0).float()</code> in every surrogate&rsquo;s <code>forward</code>. Resolved in merged PR&nbsp;#432, which shipped the reported fix (<code>.to(input_.dtype)</code>).</div>
+        <div class="foot"><span>merged 2026 &middot; 08</span><span class="arw">&rarr;</span></div>
+      </a>
 
       <a class="card" href="https://github.com/jeshraghian/snntorch/pull/441">
         <div class="name">snntorch #441</div>
@@ -776,9 +783,21 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     </p>
     <a class="big" href="https://github.com/tritsystem">github.com/tritsystem &rarr;</a>
     <p class="disclaimer">
+      <strong>AI use.</strong> This work is done with AI assistance &mdash; primarily Claude
+      (Anthropic), via Claude Code &mdash; as a pair-programmer and research assistant across
+      code, experiments, analysis and writing. The research is human-directed: I choose the
+      questions and hypotheses, pre-register every test before seeing the outcome, run and can
+      reproduce every number (nothing here is AI-estimated), review and own every line of code
+      and prose, and report negatives and boundaries the same way as the wins. Upstream bug
+      fixes disclose AI assistance per each project&rsquo;s policy and are only filed once I
+      have reproduced them myself. Anything that looks machine-generated and wrong is my
+      responsibility &mdash; open an issue.
+    </p>
+    <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
-      sum across the 27 repositories listed. Upstream pull requests were open and unmerged
-      at that date &mdash; status is stated as filed, not accepted.
+      sum across the 27 repositories listed. Upstream: the snnTorch dtype fix was reported by me
+      (issue&nbsp;#422) and merged as PR&nbsp;#432 (authored by another contributor); the other three
+      pull requests are my own and were open/unmerged as of 2026-09-02.
     </p>
   </div>
 </footer>
