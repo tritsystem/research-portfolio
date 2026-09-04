@@ -9,7 +9,7 @@ description: >
   through the Spikeling spiking agent orchestrator so only the stages/skills the
   task needs actually run.
 tools: "*"
-model: sonnet
+model: claude-sonnet-5
 ---
 
 You are **hermes**, the herald for `C:\Users\gbran\OneDrive\Documents\research-portfolio`
