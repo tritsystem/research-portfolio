@@ -169,6 +169,32 @@ h2.sec-title{font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.015em;margin:
 }
 .card .foot .arw{color:var(--ember-bright);transition:transform .18s}
 .card:hover .foot .arw{transform:translateX(4px)}
+.card .lineage{
+  margin-top:11px;font-family:var(--mono);font-size:10px;line-height:1.55;
+  letter-spacing:.02em;color:var(--faint);
+}
+.card .lineage .from{
+  color:var(--ember-bright);text-transform:uppercase;letter-spacing:.07em;font-weight:600;
+}
+.card .lineage .to::before{content:" \2192 ";color:var(--faint)}
+
+/* ---------- lineage map ---------- */
+.lineage-map{
+  margin-top:30px;border:1px solid var(--edge);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
+  padding:22px 20px 20px;overflow-x:auto;
+}
+.lineage-map pre{
+  margin:0;font-family:var(--mono);font-size:12px;line-height:1.9;
+  white-space:pre;color:var(--soft);min-width:660px;
+}
+.lineage-map b.root{color:#fff;font-weight:700}
+.lineage-map b.hinge{color:var(--ember-bright);font-weight:600}
+.lineage-map b.thread{color:var(--gold);font-weight:600;letter-spacing:.06em}
+.lineage-map b.node{color:var(--ink);font-weight:600}
+.lineage-map span.tw{color:var(--faint)}
+.lineage-map .rule{color:var(--edge2)}
+.map-foot{margin-top:14px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.03em}
 
 /* ---------- results ledger (methodlm ledger-tape look) ---------- */
 .ledger-scroll{
@@ -224,6 +250,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     <span class="brand">gavin&nbsp;branaa<span class="dim">&nbsp;/&nbsp;tritsystem</span></span>
     <nav class="topnav">
       <a href="#origins">Origins</a>
+      <a href="#lineage">Lineage</a>
       <a href="#plants">Plants</a>
       <a href="#neuro">Neuromorphic</a>
       <a href="#ternary">Ternary</a>
@@ -250,7 +277,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       <div><div class="n">27</div><div class="k">repositories</div></div>
       <div><div class="n">~600</div><div class="k">commits</div></div>
       <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
-      <div><div class="n">1&nbsp;/&nbsp;4</div><div class="k">upstream fixes merged / filed</div></div>
+      <div><div class="n">1&nbsp;/&nbsp;13</div><div class="k">upstream fixes merged / filed</div></div>
     </div>
   </div>
 </header>
@@ -296,7 +323,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; four bug-fixes sent upstream to snntorch, sinabs and tenns-core &mdash; the snnTorch dtype fix merged, three still open.</div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward &mdash; <b>13 bug-fixes</b> filed to spikingjelly, snntorch, transformers, kornia, torchaudio and more, <b>one merged</b> (spikingjelly&nbsp;#743). <a href="oss/">Full record &rarr;</a></div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -337,6 +364,64 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <p>&ldquo;That which is below is like that which is above.&rdquo;</p>
         <div class="attr">the Emerald Tablet &mdash; read here as an argument against bottleneck systems</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="lineage" class="narr">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">00b &mdash; Lineage</span>
+    </div>
+    <h2 class="sec-title">Every repo, traced back to the same starting point</h2>
+    <div class="prose">
+      <p>
+        One game, one gardening question, and one question about shape that turned into
+        topology. Everything else hangs off that &mdash; either as a <strong>tool the
+        research needed</strong>, a <strong>place the research had to survive</strong>
+        (two games, a kernel), or the <strong>discipline itself</strong> spun out into
+        software. Two concrete things are shared all the way down: a single
+        <code>.spk</code> brain file that runs on four backends unchanged, and one
+        measured-results ledger that every project reports into.
+      </p>
+    </div>
+
+    <div class="lineage-map">
+<pre><b class="root">&#9679;  horde-defense-beta</b>        a game. the first repo &mdash; no research attached.
+&#9474;
+&#9492;&#9472; <b class="hinge">a gardening question</b>      copper rods in soil: does the <b class="node">SHAPE</b> of the rod matter?
+   &#9474;
+   &#9492;&#9472; <b class="hinge">TOPOLOGY</b>               what stays true about a form when you bend it &mdash;
+      &#9474;                      the through-question under everything below
+      &#9474;
+      &#9500;&#9472; <b class="thread">PHONONIC</b> &middot; can a vibrating structure compute, and does its symmetry matter?
+      &#9474;     &#9500;&#9472; <b class="node">quasicrystal-mems-reservoir</b>
+      &#9474;     &#9500;&#9472; <b class="node">symmetry-selection-rule</b>
+      &#9474;     &#9492;&#9472; <b class="node">topological-phononics</b>     SSH-coupled reservoir; defect-tolerance
+      &#9474;                                  bounded to chiral symmetry
+      &#9474;
+      &#9500;&#9472; <b class="thread">NEUROMORPHIC</b> &middot; <b class="node">Spikeling</b> &mdash; built to run the plant feeder, before any game
+      &#9474;     &#9500;&#9472; <b class="node">tribe</b>                    every NPC runs a .spk brain, not a tree
+      &#9474;     &#9500;&#9472; <b class="node">horde-defense-beta</b>       the first game, now driven by the engine
+      &#9474;     &#9500;&#9472; <b class="node">spikeling-os</b>             kernel scheduler IS the SNN + SSH topology
+      &#9474;     &#9474;                           (coupling borrowed from topological-phononics)
+      &#9474;     &#9500;&#9472; <b class="node">pond-health</b>  -&gt;  <b class="node">sensor-duo</b>    pattern extracted the 2nd time it recurred
+      &#9474;     &#9474;             -&gt;  <b class="node">ternary-snn-monitor</b>   + OBSERVE ternary compression
+      &#9474;     &#9500;&#9472; <b class="node">silicon-mega-accelerator</b> accel techniques, tested against the runtime
+      &#9474;     &#9500;&#9472; <b class="node">heterogeneous-neuron-ontology</b>
+      &#9474;     &#9492;&#9472; <b class="node">doorcam</b>                  via Spikeling's hardware sensor-adapter layer
+      &#9474;
+      &#9492;&#9472; <b class="thread">THE METHOD</b> &middot; pre-register -&gt; measure -&gt; report the negative, same voice
+            &#9500;&#9472; <b class="node">methodlm</b>  -&gt;  <b class="node">llama-demo</b>     the discipline compiled into software
+            &#9500;&#9472; <b class="node">the-playbook</b>                 teaches the portfolio back, to defend it
+            &#9492;&#9472; <b class="node">audit method</b>  -&gt;  upstream &mdash; spikingjelly #743 (merged),
+                                     snntorch #441, transformers #48509, kornia #4210, +9 more
+
+
+<b class="root">&#9679;  012-trit-search / OBSERVE</b>    a parallel root: three-state-logic research -&gt; a tool
+      &#9500;&#9472; <b class="node">observe-api</b>            hosted, pay-per-query, live billing
+      &#9492;&#9472; <b class="node">mcp-gateway</b>  -&gt;  <b class="node">server-guard</b>   audit log + rate limits for the surfaces above</pre>
+      <div class="map-foot">20 of 27 repositories shown &mdash; the rest are small single-purpose tools branching off the same nodes.</div>
     </div>
   </div>
 </section>
@@ -410,6 +495,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">Spikeling</div>
         <div class="meta"><span class="lang">C · Python · GDScript</span><span>83 commits</span><span>public</span></div>
         <div class="desc">A DSL + runtime for spiking neural networks. The same <code>.spk</code> file runs on Python, C, Verilog and Godot backends. Ships a Godot game-AI plugin, an MCP server, and a hardware sensor-adapter layer confirmed against real acoustic, telemetry and video devices.</div>
+        <div class="lineage"><span class="from">from</span> the plant-feeder controller <span class="to">tribe, horde AI, spikeling-os, pond-health, ternary-snn-monitor</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -417,6 +503,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">spikeling-os</div>
         <div class="meta"><span class="lang">Rust</span><span>121 milestones</span><span>public</span></div>
         <div class="desc">A from-scratch x86_64 kernel whose task scheduler <em>is</em> the Spikeling runtime &mdash; an SNN with topological SSH-coupled connectivity as real kernel control logic. Includes an evidence-gated self-healing topology and a growing subset-C compiler with its own on-target test suite.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling + topological-phononics <span class="to">borrows the SSH coupling as scheduler logic</span></div>
         <div class="foot"><span>active 2026 · 09</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -424,6 +511,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">silicon-mega-accelerator</div>
         <div class="meta"><span class="lang">Python</span><span>5 commits</span><span>public</span></div>
         <div class="desc">Hardware-accelerator techniques from the neural-network-on-silicon literature, applied to the Spikeling runtime and tested for correctness and accuracy rather than asserted to help.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">accelerator literature, tested against the runtime</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -431,6 +519,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">ternary-snn-monitor</div>
         <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
         <div class="desc">Heterogeneous spiking-neuron anomaly detection plus multi-trit ternary compression, run against live telemetry, CSV replay, a desktop widget and real audio.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling + OBSERVE <span class="to">its SNN detector, its ternary compression</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -438,6 +527,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">heterogeneous-neuron-ontology</div>
         <div class="meta"><span class="lang">Python</span><span>public</span></div>
         <div class="desc">Testing an external &ldquo;heterogeneous compute&rdquo; ontology principle against how a spiking neuron population is actually composed.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">an outside claim, checked against the real population</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -462,6 +552,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">012-trit-search / OBSERVE</div>
         <div class="meta"><span class="lang">Python</span><span>105 commits</span><span>public</span></div>
         <div class="desc">Ternary-computing research and its shipping product: local, private semantic code search (desktop GUI, CLI, MCP server), one-line install, nothing leaves the machine. Chunk-provenance lineage across commits, hybrid lexical + semantic search, incremental re-indexing.</div>
+        <div class="lineage"><span class="from">from</span> three-state-logic research <span class="to">observe-api, mcp-gateway, ternary-snn-monitor</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -469,6 +560,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">methodlm</div>
         <div class="meta"><span class="lang">Python</span><span>14 commits</span><span>public</span></div>
         <div class="desc">A verifiable causal-reasoning harness. Pre-registers every test, runs real backdoor adjustment with a robustness value, and runs DoWhy-backed refutation &mdash; placebo treatment, random common cause, subset validation &mdash; against each accepted claim. Benchmarked on ten cited public datasets plus this portfolio&rsquo;s own live telemetry.</div>
+        <div class="lineage"><span class="from">from</span> the phononic-reservoir measurement discipline <span class="to">llama-demo, the results ledger</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -476,6 +568,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">llama-demo</div>
         <div class="meta"><span class="lang">Python</span><span>~7 commits</span><span>public</span></div>
         <div class="desc">Zero-cost local-model experiments (Ollama) applying the methodlm discipline to LLM tooling &mdash; a coding-agent dispatcher, model vet/quantize/finetune scripts, and honest negatives: a local 7B failed to fix a real bug even when handed the exact correct lesson.</div>
+        <div class="lineage"><span class="from">from</span> methodlm <span class="to">the discipline as training signal, not just a prompt</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -501,6 +594,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">quasicrystal-mems-reservoir</div>
         <div class="meta"><span class="lang">Python</span><span>3 commits</span><span>public</span></div>
         <div class="desc">Finite-element study of quasicrystal-perforated MEMS resonators and what their mode structure can &mdash; and cannot &mdash; compute as a physical reservoir. Includes the write-up.</div>
+        <div class="lineage"><span class="from">from</span> the copper-rod &ldquo;does shape matter&rdquo; question <span class="to">symmetry-selection-rule</span></div>
         <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -508,6 +602,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">symmetry-selection-rule</div>
         <div class="meta"><span class="lang">report</span><span>2 commits</span><span>public</span></div>
         <div class="desc">A lab report deriving a symmetry selection rule for computation in phononic and quasicrystal MEMS reservoirs &mdash; which modes are available to the readout, and why.</div>
+        <div class="lineage"><span class="from">from</span> quasicrystal-mems-reservoir <span class="to">the rule it implied, derived and stress-tested</span></div>
         <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -515,6 +610,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">topological-phononics</div>
         <div class="meta"><span class="lang">Python</span><span>12 commits</span><span>public</span></div>
         <div class="desc">Does topological structure make an analog SSH reservoir tolerate a dead element? A pre-registered study with a sharp answer and a sharp boundary: the protection holds only while chiral symmetry does, and reverses sign in a physical Duffing model. Includes a Fibonacci-connectivity cost study, scale-characterised N = 50&ndash;10,000.</div>
+        <div class="lineage"><span class="from">from</span> the phononic thread <span class="to">spikeling-os borrows its SSH coupling for the scheduler</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -539,6 +635,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">tribe</div>
         <div class="meta"><span class="lang">GDScript</span><span>74 commits</span><span>public · 3&#9733;</span></div>
         <div class="desc">A survival / RTS sim where every NPC &mdash; tribe members, animals, rival AI &mdash; runs a small spiking neural network instead of a behaviour tree. Persistence with offline catch-up, proximity trade and diplomacy, and emergent phase-locking between independent NPC brains driven only by shared drum audio.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">the plant-feeder loop, now learning a player</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -546,6 +643,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">horde-defense-beta</div>
         <div class="meta"><span class="lang">GDScript</span><span>~12 commits</span><span>public · 1&#9733;</span></div>
         <div class="desc">The repo that started everything. A 3D horde-defense game with a deck-building creep system &mdash; and the source of the questions the rest of the portfolio went on to chase.</div>
+        <div class="lineage"><span class="from">the root</span> <span class="to">now runs on Spikeling, like everything downstream of it</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -567,6 +665,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">observe-api</div>
         <div class="meta"><span class="lang">Python</span><span>102 commits</span><span>public</span></div>
         <div class="desc">A hosted, pay-per-query semantic code-search API for AI agents, plus an ACP- and Google-UCP-compatible agent-commerce discovery and reputation layer &mdash; the cross-merchant discovery gap neither spec actually defines. Real Stripe billing, live deployment behind Caddy + TLS, two-sided reputation from earned agreement between disconnected keys.</div>
+        <div class="lineage"><span class="from">from</span> OBSERVE <span class="to">the local tool, hosted and billed</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -574,6 +673,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">mcp-gateway</div>
         <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
         <div class="desc">A self-contained, tamper-evident audit log &mdash; hash-chained JSONL &mdash; plus rate limiting for local MCP tool servers. Wired into both OBSERVE&rsquo;s and Spikeling&rsquo;s tool surfaces so every call is logged and bounded. Single-operator scope, no cloud dependency.</div>
+        <div class="lineage"><span class="from">from</span> OBSERVE + Spikeling <span class="to">their MCP surfaces needed an audit trail; feeds server-guard</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -581,6 +681,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">server-guard</div>
         <div class="meta"><span class="lang">Python</span><span>42 commits</span><span>public</span></div>
         <div class="desc">Real-time server monitoring and alerting, benchmarked head-to-head against Datadog, Wazuh, PagerDuty and Netdata on sourced, cited pricing rather than marketing claims.</div>
+        <div class="lineage"><span class="from">from</span> mcp-gateway <span class="to">watching the same surfaces, at host scale</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -602,6 +703,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">doorcam</div>
         <div class="meta"><span class="lang">Python</span><span>8 commits</span><span>public</span></div>
         <div class="desc">A regular USB webcam becomes a driveway monitor: YOLOv8 person / vehicle detection restricted to a hand-drawn boundary, Discord webhook alerts with snapshots, and a live MJPEG feed built for screen-sharing.</div>
+        <div class="lineage"><span class="from">from</span> Spikeling&rsquo;s hardware sensor-adapter layer <span class="to">the video-device path, as a standalone build</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -609,6 +711,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">pond-health</div>
         <div class="meta"><span class="lang">Python</span><span>7 commits</span><span>public</span></div>
         <div class="desc">Predicts pond oxygen crashes and algae blooms before they&rsquo;re visible. A transparent trend model &mdash; no black box, because there&rsquo;s no honest training data yet &mdash; with a Spikeling SNN as a second detector, measured against the trend model rather than assumed better. It never false-alarms but gives no early warning; the trend model does the opposite.</div>
+        <div class="lineage"><span class="from">from</span> the original plant-feeder idea <span class="to">an SNN watching an environment; feeds sensor-duo, ternary-snn-monitor</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -616,6 +719,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">sensor-duo</div>
         <div class="meta"><span class="lang">Python</span><span>6 commits</span><span>public</span></div>
         <div class="desc">The trend + spiking + SQLite + Grafana anomaly-detection pattern from pond-health, extracted into a reusable toolkit after building it by hand twice. Generic over any named numeric channel, with a normalised schema so a new channel never needs a migration.</div>
+        <div class="lineage"><span class="from">from</span> pond-health <span class="to">the pattern, extracted the 2nd time it was needed</span></div>
         <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -627,49 +731,68 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">1 merged &middot; 3 open</span>
+      <span class="sec-count">1 merged &middot; 12 filed</span>
     </div>
-    <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s neuromorphic libraries</h2>
+    <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
     <p class="sec-intro">
-      Each is a real bug found by reading the code carefully, reproduced, and sent upstream
-      with a root cause and a fix. The first has landed on the library&rsquo;s <code>master</code>;
-      the other three are open and under review.
+      The audit method sharpened on Spikeling&rsquo;s own reset / dtype / per-neuron bugs,
+      then pointed outward &mdash; first at neuromorphic libraries, then at
+      transformers, kornia, torchaudio and the lucidrains attention repos. Each is a
+      real bug found by reading the code, reproduced against a clean install, and sent
+      upstream with a root cause, a fix, and a failing-then-passing test. One has landed;
+      the rest are filed and open. <b>&ldquo;Merged&rdquo; means a merged pull request I
+      authored &mdash; that is exactly one.</b>
+      <a href="oss/">The full audited record, with method and per-finding write-ups &rarr;</a>
     </p>
     <div class="grid">
 
-      <a class="card" href="https://github.com/jeshraghian/snntorch/issues/422">
-        <div class="name">snntorch #422 &rarr; #432</div>
+      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/743">
+        <div class="name">spikingjelly #743</div>
         <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc">Reported: <code>float64</code> input, but the spike output silently downcast to <code>float32</code> across Leaky / Synaptic / Lapicque &mdash; root-caused to a hardcoded <code>(input_ &gt; 0).float()</code> in every surrogate&rsquo;s <code>forward</code>. Resolved in merged PR&nbsp;#432, which shipped the reported fix (<code>.to(input_.dtype)</code>).</div>
-        <div class="foot"><span>merged 2026 &middot; 08</span><span class="arw">&rarr;</span></div>
+        <div class="desc">A neuron&rsquo;s registered reset values are plain attributes, not buffers, so <code>.to()</code> / <code>.half()</code> never moves them. After <code>net.half()</code>, <code>reset()</code> writes a float32 value back into a float16 state. Fix threads the transform through the reset-value store.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/huggingface/transformers/pull/48509">
+        <div class="name">transformers #48509</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc"><code>DynamicCache.reset()</code> zeros the K/V in place &mdash; correct for the fixed-buffer <code>StaticLayer</code>, wrong for <code>DynamicLayer</code>, which grows by <code>cat</code>. Post-reset the cache is corrupt, not empty. Fix gives <code>DynamicLayer</code> a real reset.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/kornia/kornia/pull/4210">
+        <div class="name">kornia #4210</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc">Every auto-augment policy gates through one float32 mask, upcasting a float16 / bfloat16 batch to float32. Fix threads the input dtype into the mask; also clears 19 of the repo&rsquo;s tracked half-precision xfails. Maintainer-approved pending changelog.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/lucidrains/rotary-embedding-torch/pull/50">
+        <div class="name">rotary-embedding-torch #50</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc">The token-position index is built in the query dtype. float16 can&rsquo;t hold integers past 2048 &mdash; so past that, consecutive positions collapse onto the same rotary frequency and the position signal flattens. Fix widens the position math to float32.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
       <a class="card" href="https://github.com/jeshraghian/snntorch/pull/441">
         <div class="name">snntorch #441</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
-        <div class="desc"><code>LeakyParallel</code> silently ignored a per-neuron <code>beta</code>, collapsing it to a scalar. Fix restores the per-neuron decay and corrects the recurrence.</div>
-        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc"><code>LeakyParallel</code> silently ignores a per-neuron <code>beta</code> &mdash; an <code>if/elif</code> branch shadowed by one that always matches first. Fix restores the per-neuron decay and rejects a wrong-length <code>beta</code>. (snntorch&nbsp;#443: <code>zeros()</code> no-op.)</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
-      <a class="card" href="https://github.com/jeshraghian/snntorch/pull/443">
-        <div class="name">snntorch #443</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
-        <div class="desc"><code>SpikingNeuron.zeros()</code> was a silent no-op. Fix makes it actually zero the state and keeps it leaf-tensor safe for autograd.</div>
-        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      <a class="card" href="https://github.com/lucidrains/vit-pytorch/pull/373">
+        <div class="name">vit-pytorch #373</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc"><code>RvT</code> doesn&rsquo;t run in half precision at all: its axial rotary embedding unpacks the input dtype and never uses it, so <code>sin</code>/<code>cos</code> stay float32 and the attention matmul raises. Fix is the one line that uses the dtype it already read.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
-      <a class="card" href="https://github.com/Brainchip-Inc/tenns-core/pull/1">
-        <div class="name">tenns-core #1</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
-        <div class="desc"><code>SSMLayerInference.reset_state()</code> kept a stale batch dimension, breaking streaming inference after a batch-size change. Fix makes the reset shape-correct.</div>
-        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/synsense/sinabs/pull/336">
-        <div class="name">sinabs #336</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>open</span></div>
-        <div class="desc">Membrane potential was read for the layer output before being clipped to <code>min_v_mem</code>. Fix clips first, then emits &mdash; closing issue #236.</div>
-        <div class="foot"><span>filed 2026 · 09</span><span class="arw">&rarr;</span></div>
+      <a class="card" href="oss/">
+        <div class="name">&hellip; and 7 more</div>
+        <div class="meta"><span class="lang">record</span><span>filed</span></div>
+        <div class="desc">perceiver-pytorch&nbsp;#70, torchaudio&nbsp;#4228, reservoirpy&nbsp;#245, pytorch-esn&nbsp;#27, tenns-core&nbsp;#1, sinabs&nbsp;#336, librosa&nbsp;#2099 &mdash; each with a root cause, a reproduction, a fix, and a regression test. Method overview and honest-negatives list included.</div>
+        <div class="foot"><span>the full record</span><span class="arw">&rarr;</span></div>
       </a>
 
     </div>
@@ -774,12 +897,14 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap prose">
     <h2>The through-line</h2>
     <p>
-      Two research threads &mdash; neuromorphic and phononic &mdash; both testing when
-      structure and symmetry actually <em>help</em> a system compute. That question
-      doesn&rsquo;t stay theoretical: the same engine drives two games and a kernel
-      scheduler, and the same discipline &mdash; measure it, verify it, report what
-      happened, negatives included &mdash; carries all the way to software people can
-      pay for and depend on.
+      It runs one way, end to end: a game &rarr; a gardening question about copper rods
+      and whether <em>shape</em> matters &rarr; topology &rarr; two engines that test when
+      structure and symmetry actually <em>help</em> a system compute &rarr; every repo in
+      the <a href="#lineage" style="color:var(--ember-bright)">lineage map</a>. Nothing here
+      is a stack of side projects. The same <code>.spk</code> brain drives two games and a
+      kernel scheduler; the same measurement discipline &mdash; measure it, verify it, report
+      what happened, negatives included &mdash; carries all the way to software people can
+      pay for and depend on, and into other people&rsquo;s libraries as upstream fixes.
     </p>
     <a class="big" href="https://github.com/tritsystem">github.com/tritsystem &rarr;</a>
     <p class="disclaimer">
@@ -795,9 +920,12 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     </p>
     <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
-      sum across the 27 repositories listed. Upstream: the snnTorch dtype fix was reported by me
-      (issue&nbsp;#422) and merged as PR&nbsp;#432 (authored by another contributor); the other three
-      pull requests are my own and were open/unmerged as of 2026-09-02.
+      sum across the 27 repositories listed. Upstream, status re-checked with <code>gh pr view</code>
+      on 2026-09-04: one merged pull request I authored (spikingjelly&nbsp;#743); twelve pull
+      requests filed and open; two issues open. Separately, a bug I reported to snnTorch
+      (issue&nbsp;#430, the <code>LSO</code> surrogate) was fixed and merged upstream by other
+      contributors. &ldquo;Merged&rdquo; on this page always means a merged pull request authored by me.
+      Full per-finding record and live status: <a href="oss/">/oss</a>.
     </p>
   </div>
 </footer>
