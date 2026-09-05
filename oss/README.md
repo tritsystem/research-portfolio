@@ -36,7 +36,7 @@ last full re-check: 2026-09-05.
 | 10 | stefanonardo/pytorch-esn | [#27](https://github.com/stefanonardo/pytorch-esn/pull/27) — `reset_parameters()` doesn't clear ridge stats as documented | filed (open) |
 | 11 | huggingface/transformers | [#48509](https://github.com/huggingface/transformers/pull/48509) — `DynamicCache.reset()` corrupts instead of empties | filed (open) |
 | 12 | pytorch/audio | [#4228](https://github.com/pytorch/audio/pull/4228) — `transforms.Fade` envelope has no `dtype=`, upcasts fp16/bf16 | filed (open; repo template says "no longer actively monitored") |
-| 13 | kornia/kornia | [#4210](https://github.com/kornia/kornia/pull/4210) — auto-augment gate mask upcasts fp16/bf16 | filed (open) — maintainer commented approval twice, but branch protection needs a *formal* GH review, not a comment; still `REVIEW_REQUIRED` |
+| 13 | kornia/kornia | [#4210](https://github.com/kornia/kornia/pull/4210) — auto-augment gate mask upcasts fp16/bf16 | **MERGED** 2026-09-05 (by maintainer ducha-aiki, after two informal "approve" comments finally became a real formal review) |
 | 14 | lucidrains/rotary-embedding-torch | [#50](https://github.com/lucidrains/rotary-embedding-torch/pull/50) — `get_seq_pos` position index built in low-precision dtype | filed (open) |
 | 15 | lucidrains/perceiver-pytorch | [#70](https://github.com/lucidrains/perceiver-pytorch/pull/70) — Fourier position grid has no `dtype=`, `gated`/`mixed_latents` variants crash in fp16 | filed (open) |
 | 16 | lucidrains/vit-pytorch | [#373](https://github.com/lucidrains/vit-pytorch/pull/373) — `RvT`'s `AxialRotaryEmbedding` unpacks `dtype`, never uses it | filed (open) |
@@ -87,8 +87,8 @@ autonomous filing):
 - **Home Assistant** — a state-cache staleness finding, held back given the
   project's blanket AI-policy block (same category as scikit-learn).
 
-**Tally, 2026-09-05:** 1 merged (own) · 4 reported and fixed upstream by
-others · 30 filed and open (PR, issue, or discussion) · 3 closed/declined on
+**Tally, 2026-09-05:** 2 merged (own) · 4 reported and fixed upstream by
+others · 29 filed and open (PR, issue, or discussion) · 3 closed/declined on
 a blanket AI-contribution policy (not technical) · 1 closed/declined on a
 maintainer's technical judgment call · 2 private security disclosures
 (1 formal advisory in triage, 1 email sent directly) · 4 drafted, held back

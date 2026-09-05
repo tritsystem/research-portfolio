@@ -323,7 +323,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 30 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>one merged</b> (spikingjelly&nbsp;#743) and <b>four more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 30 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>two merged</b> (spikingjelly&nbsp;#743, kornia&nbsp;#4210) and <b>four more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -731,7 +731,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">1 merged &middot; 4 fixed upstream &middot; 30 filed</span>
+      <span class="sec-count">2 merged &middot; 4 fixed upstream &middot; 29 filed</span>
     </div>
     <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
     <p class="sec-intro">
@@ -740,10 +740,10 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       repos, then at general-purpose Python infrastructure (aiohttp, Pillow, SciPy,
       botocore, Celery and more). Each is a real bug found by reading the code, reproduced
       against a clean install, and sent upstream with a root cause, a fix, and a
-      failing-then-passing test. One PR of mine has landed; four more bugs I reported were
+      failing-then-passing test. Two PRs of mine have landed; four more bugs I reported were
       independently fixed upstream by the projects themselves; the rest are filed and open.
       <b>&ldquo;Merged&rdquo; means a merged pull request I authored &mdash; that is exactly
-      one.</b> <a href="oss/">The full audited record, with method and per-finding
+      two.</b> <a href="oss/">The full audited record, with method and per-finding
       write-ups &rarr;</a>
     </p>
     <div class="grid">
@@ -764,9 +764,9 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
 
       <a class="card" href="https://github.com/kornia/kornia/pull/4210">
         <div class="name">kornia #4210</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc">Every auto-augment policy gates through one float32 mask, upcasting a float16 / bfloat16 batch to float32. Fix threads the input dtype into the mask; also clears 19 of the repo&rsquo;s tracked half-precision xfails. Maintainer-approved pending changelog.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc">Every auto-augment policy gates through one float32 mask, upcasting a float16 / bfloat16 batch to float32. Fix threads the input dtype into the mask; also clears 19 of the repo&rsquo;s tracked half-precision xfails.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
       <a class="card" href="https://github.com/lucidrains/rotary-embedding-torch/pull/50">
@@ -924,8 +924,8 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
       sum across the 27 repositories listed. Upstream, status re-checked live via
-      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-05: one merged pull request I
-      authored (spikingjelly&nbsp;#743); 30 pull requests, issues, or discussions filed and open.
+      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-05: two merged pull requests I
+      authored (spikingjelly&nbsp;#743, kornia&nbsp;#4210); 29 pull requests, issues, or discussions filed and open.
       Separately, four bugs I reported were fixed and merged upstream by other contributors, not by
       a PR of mine: snnTorch (issue&nbsp;#430, the <code>LSO</code> surrogate, fixed via PRs
       #374/#418), SciPy (issue&nbsp;#26095, <code>optimize.milp</code> mutating the caller&rsquo;s
