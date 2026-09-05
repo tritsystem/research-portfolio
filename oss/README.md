@@ -49,8 +49,8 @@ last full re-check: 2026-09-05.
 | 23 | fastapi/sqlmodel | [#2087](https://github.com/fastapi/sqlmodel/issues/2087) — `model_copy(deep=False)` shares SQLAlchemy state on a persisted instance | filed (open) |
 | 24 | boto/botocore | [#3792](https://github.com/boto/botocore/issues/3792) — `Config.merge()` aliases nested option dicts | filed (open) |
 | 25 | celery/celery | [#10560](https://github.com/celery/celery/issues/10560) — `Signature.clone()` aliases `.kwargs` | filed (open) |
-| 26 | python-pillow/Pillow | [#9963](https://github.com/python-pillow/Pillow/issues/9963) — `Image.copy()`/`transform()` alias list-valued `.info` entries | filed (open) — 3rd-party PR fix in flight ([#9964](https://github.com/python-pillow/Pillow/pull/9964), lazerg); independently re-verified (fresh repro fails on unpatched, patch clears it), corroborating comment posted |
-| 27 | aio-libs/aiohttp | [#13634](https://github.com/aio-libs/aiohttp/issues/13634) — `CookieJar.update_cookies()` aliases a `Morsel` | filed (open) |
+| 26 | python-pillow/Pillow | [#9963](https://github.com/python-pillow/Pillow/issues/9963) — `Image.copy()`/`transform()` alias list-valued `.info` entries | **reported; fixed upstream by others** (maintainer Andrew Murray, PR [#9964](https://github.com/python-pillow/Pillow/pull/9964); merged 2026-09-05) |
+| 27 | aio-libs/aiohttp | [#13634](https://github.com/aio-libs/aiohttp/issues/13634) — `CookieJar.update_cookies()` aliases a `Morsel` | **reported; fixed upstream by others** (maintainer Sam Bull, PR [#13637 "Fix mutable morsels"](https://github.com/aio-libs/aiohttp/pull/13637); merged 2026-09-05) |
 | 28 | scipy/scipy | [#26095](https://github.com/scipy/scipy/issues/26095) — `milp()` mutates the caller's options dict | **reported; fixed upstream by others** (maintainer j-bowhay, PR #26097; closed) |
 | 29 | encode/httpx | [discussion #3786](https://github.com/encode/httpx/discussions/3786) — `Cookies.__init__` aliases a raw `http.cookiejar.CookieJar` argument | filed (discussion, per repo's discussion-before-PR norm) |
 | 30 | pytorch/pytorch | [#196083](https://github.com/pytorch/pytorch/issues/196083) — `Optimizer.state_dict()`/`load_state_dict()` silently alias tensors across optimizers | filed (open) — filed personally by the author per PyTorch's `AI_POLICY.md`, after independently re-verifying on a second torch build |
@@ -66,6 +66,14 @@ last full re-check: 2026-09-05.
 | 40 | apache/superset | [#43918](https://github.com/apache/superset/issues/43918) — "Refresh columns" doesn't bump `changed_on`, so the chart cache goes stale | filed (open) |
 | 41 | getsentry/sentry | Cross-tenant slug→pk pointer-cache staleness after a `post_init`-bypassing rename | **private disclosure** — no public tracker; disclosure email sent to `security@sentry.io` 2026-09-05, verified via a standalone Django reproduction (the `sentry` package itself couldn't be imported standalone) |
 
+**Confirmed fixes — bugs reported here, fixed upstream by the maintainer**
+(none of these are our merged code; each is a real defect reported, then
+independently fixed by the project itself, usually within a day):
+- **jeshraghian/snntorch** [#430](https://github.com/jeshraghian/snntorch/issues/430) — `surrogate.LSO()` wrapped the wrong autograd `Function` → fixed via PRs [#374](https://github.com/jeshraghian/snntorch/pull/374)/[#418](https://github.com/jeshraghian/snntorch/pull/418), merged 2026-08-23.
+- **scipy/scipy** [#26095](https://github.com/scipy/scipy/issues/26095) — `milp()` mutated the caller's options dict → fixed via PR [#26097](https://github.com/scipy/scipy/pull/26097) (j-bowhay), merged 2026-09-04.
+- **aio-libs/aiohttp** [#13634](https://github.com/aio-libs/aiohttp/issues/13634) — `CookieJar.update_cookies()` aliased a `Morsel` → fixed via PR [#13637](https://github.com/aio-libs/aiohttp/pull/13637) (Sam Bull), merged 2026-09-05.
+- **python-pillow/Pillow** [#9963](https://github.com/python-pillow/Pillow/issues/9963) — `Image.copy()` aliased list-valued `.info` entries → fixed via PR [#9964](https://github.com/python-pillow/Pillow/pull/9964) (Andrew Murray), merged 2026-09-05.
+
 **Held back, drafted but NOT yet filed** (each project's own AI-contribution
 policy requires the human author to personally review and submit, not an
 autonomous filing):
@@ -79,8 +87,8 @@ autonomous filing):
 - **Home Assistant** — a state-cache staleness finding, held back given the
   project's blanket AI-policy block (same category as scikit-learn).
 
-**Tally, 2026-09-05:** 1 merged (own) · 2 reported and fixed upstream by
-others · 32 filed and open (PR, issue, or discussion) · 3 closed/declined on
+**Tally, 2026-09-05:** 1 merged (own) · 4 reported and fixed upstream by
+others · 30 filed and open (PR, issue, or discussion) · 3 closed/declined on
 a blanket AI-contribution policy (not technical) · 1 closed/declined on a
 maintainer's technical judgment call · 2 private security disclosures
 (1 formal advisory in triage, 1 email sent directly) · 4 drafted, held back

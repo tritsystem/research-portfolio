@@ -323,7 +323,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward &mdash; <b>13 bug-fixes</b> filed to spikingjelly, snntorch, transformers, kornia, torchaudio and more, <b>one merged</b> (spikingjelly&nbsp;#743). <a href="oss/">Full record &rarr;</a></div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 30 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>one merged</b> (spikingjelly&nbsp;#743) and <b>four more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -731,18 +731,20 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">1 merged &middot; 12 filed</span>
+      <span class="sec-count">1 merged &middot; 4 fixed upstream &middot; 30 filed</span>
     </div>
     <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
     <p class="sec-intro">
       The audit method sharpened on Spikeling&rsquo;s own reset / dtype / per-neuron bugs,
-      then pointed outward &mdash; first at neuromorphic libraries, then at
-      transformers, kornia, torchaudio and the lucidrains attention repos. Each is a
-      real bug found by reading the code, reproduced against a clean install, and sent
-      upstream with a root cause, a fix, and a failing-then-passing test. One has landed;
-      the rest are filed and open. <b>&ldquo;Merged&rdquo; means a merged pull request I
-      authored &mdash; that is exactly one.</b>
-      <a href="oss/">The full audited record, with method and per-finding write-ups &rarr;</a>
+      then pointed outward &mdash; first at neuromorphic libraries and PyTorch-ecosystem
+      repos, then at general-purpose Python infrastructure (aiohttp, Pillow, SciPy,
+      botocore, Celery and more). Each is a real bug found by reading the code, reproduced
+      against a clean install, and sent upstream with a root cause, a fix, and a
+      failing-then-passing test. One PR of mine has landed; four more bugs I reported were
+      independently fixed upstream by the projects themselves; the rest are filed and open.
+      <b>&ldquo;Merged&rdquo; means a merged pull request I authored &mdash; that is exactly
+      one.</b> <a href="oss/">The full audited record, with method and per-finding
+      write-ups &rarr;</a>
     </p>
     <div class="grid">
 
@@ -921,12 +923,17 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     </p>
     <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
-      sum across the 27 repositories listed. Upstream, status re-checked with <code>gh pr view</code>
-      on 2026-09-04: one merged pull request I authored (spikingjelly&nbsp;#743); twelve pull
-      requests filed and open; two issues open. Separately, a bug I reported to snnTorch
-      (issue&nbsp;#430, the <code>LSO</code> surrogate) was fixed and merged upstream by other
-      contributors. &ldquo;Merged&rdquo; on this page always means a merged pull request authored by me.
-      Full per-finding record and live status: <a href="oss/">/oss</a>.
+      sum across the 27 repositories listed. Upstream, status re-checked live via
+      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-05: one merged pull request I
+      authored (spikingjelly&nbsp;#743); 30 pull requests, issues, or discussions filed and open.
+      Separately, four bugs I reported were fixed and merged upstream by other contributors, not by
+      a PR of mine: snnTorch (issue&nbsp;#430, the <code>LSO</code> surrogate, fixed via PRs
+      #374/#418), SciPy (issue&nbsp;#26095, <code>optimize.milp</code> mutating the caller&rsquo;s
+      options dict, fixed via PR&nbsp;#26097), aiohttp (issue&nbsp;#13634, <code>CookieJar</code>
+      aliasing a <code>Morsel</code>, fixed via PR&nbsp;#13637), and Pillow (issue&nbsp;#9963,
+      <code>Image.copy()</code> aliasing list-valued <code>.info</code> entries, fixed via
+      PR&nbsp;#9964). &ldquo;Merged&rdquo; on this page always means a merged pull request authored
+      by me. Full per-finding record and live status: <a href="oss/">/oss</a>.
     </p>
   </div>
 </footer>
