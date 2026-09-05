@@ -118,17 +118,45 @@ Most of these entries are the same shape:
 > subclass, "device threaded but not dtype," "instance-tracked but not
 > deserialized" — and is silently wrong for another.
 
-Two recurring sub-patterns:
-- A helper or position primitive builds a tensor with `device=` but no
-  `dtype=`, so it defaults to float32. `float64` inputs hide it (type
-  promotion goes up); the tell is **float16/bfloat16 silently becoming
-  float32**. Every ML-library audit now probes below float32 first.
-- A `copy()`/`clone()`/`merge()` does a **shallow** copy of a container
-  whose *values* are themselves mutable (a nested dict, a list, a `Headers`
-  object) — the container is new, but its contents are the same objects,
-  so mutating the "copy" mutates the original. This is the dominant shape
-  across the general-Python-backend-library audits (botocore, celery,
-  Pillow, aiohttp, sqlmodel, ansible, salt).
+Two dominant sub-patterns account for most findings:
+- **dtype/precision leak.** A helper or position primitive builds a tensor
+  with `device=` but no `dtype=`, so it defaults to float32. `float64` inputs
+  hide it (type promotion goes up); the tell is **float16/bfloat16 silently
+  becoming float32**. Every ML-library audit now probes below float32 first.
+  (kornia, snnTorch, rotary-embedding-torch, perceiver-pytorch, vit-pytorch,
+  torchaudio, reservoirpy, pytorch-esn.)
+- **Shallow copy / aliasing.** A `copy()`/`clone()`/`merge()` does a
+  **shallow** copy of a container whose *values* are themselves mutable (a
+  nested dict, a list, a `Headers` object) — the container is new, but its
+  contents are the same objects, so mutating the "copy" mutates the
+  original. The dominant shape across the general-Python-backend-library
+  audits (botocore, Celery, Pillow, aiohttp, SQLModel, kombu, ansible, salt).
+
+The long tail beyond those two:
+- **Reset/state-restore for one storage model.** Correct for the subclass it
+  targeted, silently wrong for another (tenns-core, transformers
+  `DynamicCache`, pytorch-esn).
+- **Cache keyed on insufficient information.** The key doesn't capture
+  everything that determines the value, so two different things collide on
+  one cache entry (dask `tokenize`, setuptools `sys.modules`, SymPy
+  `@cacheit`).
+- **Refcount/bookkeeping asymmetry.** An increment/decrement pair balanced
+  for "insert new" but not "replace existing" (zope.interface `register()`).
+- **Falsy-check-as-memoization-guard.** `if not self._cache` instead of a
+  real sentinel, so a legitimately falsy cached value reads as "not yet
+  cached" (kombu `Message.decode()`).
+- **Partial fix / sibling miss.** The fix landed on one code path or
+  subclass, and a structurally identical sibling was never updated to match
+  (Pillow's GIF fix never reaching IM/IPTC; zope.interface's
+  `subscribe`/`unsubscribe` fix never reaching `register()`).
+
+**On "Heisenbugs":** every finding above is the opposite of one — a
+Bohrbug, deterministic and reproduced identically on every run, which is
+exactly what "repro run twice, consistent" throughout this record is
+checking for before anything gets filed. The one non-deterministic result
+in the set, kornia's CI hang (issue #4214, hangs 6/6 on two Intel Xeon
+runners tested and 0/8 on AMD EPYC), is environment-dependent rather than
+observer-dependent — closer to a Mandelbug than a Heisenbug.
 
 ---
 
