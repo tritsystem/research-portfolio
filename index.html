@@ -277,7 +277,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       <div><div class="n">27</div><div class="k">repositories</div></div>
       <div><div class="n">~600</div><div class="k">commits</div></div>
       <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
-      <div><div class="n">4&nbsp;+&nbsp;3</div><div class="k">upstream fixes merged / fixed by others</div></div>
+      <div><div class="n">6&nbsp;+&nbsp;3</div><div class="k">upstream fixes merged / fixed by others</div></div>
     </div>
   </div>
 </header>
@@ -323,7 +323,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 40 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>four merged</b> (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210) and <b>three more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 40 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>six merged</b> (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210, #4299, #4303) and <b>three more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -731,7 +731,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">4 merged &middot; 3 fixed upstream</span>
+      <span class="sec-count">6 merged &middot; 3 fixed upstream</span>
     </div>
     <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
     <p class="sec-intro">
@@ -740,10 +740,10 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       repos, then at general-purpose Python infrastructure (aiohttp, Pillow, SciPy,
       botocore, Celery and more). Each is a real bug found by reading the code, reproduced
       against a clean install, and sent upstream with a root cause, a fix, and a
-      failing-then-passing test. Four PRs of mine have landed; four more bugs I reported were
+      failing-then-passing test. Six PRs of mine have landed; three more bugs I reported were
       independently fixed upstream by the projects themselves; the rest are filed and open.
       <b>&ldquo;Merged&rdquo; means a merged pull request I authored &mdash; that is exactly
-      four.</b> <a href="oss/">The full audited record, with method and per-finding
+      six.</b> <a href="oss/">The full audited record, with method and per-finding
       write-ups &rarr;</a>
     </p>
     <div class="grid">
@@ -780,6 +780,20 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">kornia #4210</div>
         <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
         <div class="desc">Every auto-augment policy gates through one float32 mask, upcasting a float16 / bfloat16 batch to float32. Fix threads the input dtype into the mask; also clears 19 of the repo&rsquo;s tracked half-precision xfails.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/kornia/kornia/pull/4299">
+        <div class="name">kornia #4299</div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc"><code>solve_cubic</code>&rsquo;s three-real-roots branch differentiates <code>acos</code> at its own domain boundary &mdash; the value is fine but the derivative diverges, giving NaN gradients for any repeated or near-repeated root. A plain clamp doesn&rsquo;t help: it guards the value, not the diverging derivative. Fix routes the boundary through a detached value and a substituted safe gradient.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/kornia/kornia/pull/4303">
+        <div class="name">kornia #4303</div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc"><code>bbox_to_mask3d</code> unioned three axis slabs and tried to recover the intersection with a three-way reduction &mdash; which breaks the moment any one slab covers a whole axis, filling the entire volume instead of the true intersection. Fix computes the intersection directly, matching what <code>Boxes3D.to_mask</code> already did correctly.</div>
         <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -938,8 +952,8 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
       sum across the 27 repositories listed. Upstream, status re-checked live via
-      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-06: four merged pull requests I
-      authored (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210). Separately, three bugs I
+      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-06: six merged pull requests I
+      authored (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210, #4299, #4303). Separately, three bugs I
       reported were fixed and merged upstream by other contributors, not by a PR of mine: SciPy
       (issue&nbsp;#26095, fixed via PR&nbsp;#26097), aiohttp (issue&nbsp;#13634, fixed via
       PR&nbsp;#13637), and Pillow (issue&nbsp;#9963, fixed via PR&nbsp;#9964). &ldquo;Merged&rdquo;
