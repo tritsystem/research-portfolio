@@ -277,7 +277,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       <div><div class="n">27</div><div class="k">repositories</div></div>
       <div><div class="n">~600</div><div class="k">commits</div></div>
       <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
-      <div><div class="n">1&nbsp;/&nbsp;13</div><div class="k">upstream fixes merged / filed</div></div>
+      <div><div class="n">4&nbsp;+&nbsp;3</div><div class="k">upstream fixes merged / fixed by others</div></div>
     </div>
   </div>
 </header>
@@ -323,7 +323,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
         <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 30 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>two merged</b> (spikingjelly&nbsp;#743, kornia&nbsp;#4210) and <b>four more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
+        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 40 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>four merged</b> (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210) and <b>three more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
       </div>
 
       <h3>Teaching myself, in public</h3>
@@ -414,8 +414,8 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       &#9492;&#9472; <b class="thread">THE METHOD</b> &middot; pre-register -&gt; measure -&gt; report the negative, same voice
             &#9500;&#9472; <b class="node">methodlm</b>  -&gt;  <b class="node">llama-demo</b>     the discipline compiled into software
             &#9500;&#9472; <b class="node">the-playbook</b>                 teaches the portfolio back, to defend it
-            &#9492;&#9472; <b class="node">audit method</b>  -&gt;  upstream &mdash; spikingjelly #743 (merged),
-                                     snntorch #441, transformers #48509, kornia #4210, +9 more
+            &#9492;&#9472; <b class="node">audit method</b>  -&gt;  upstream &mdash; spikingjelly #743/#744/#750 (merged),
+                                     snntorch #441, transformers #48509, kornia #4210, +7 more
 
 
 <b class="root">&#9679;  012-trit-search / OBSERVE</b>    a parallel root: three-state-logic research -&gt; a tool
@@ -731,7 +731,7 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">2 merged &middot; 4 fixed upstream &middot; 29 filed</span>
+      <span class="sec-count">4 merged &middot; 3 fixed upstream</span>
     </div>
     <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
     <p class="sec-intro">
@@ -740,10 +740,10 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
       repos, then at general-purpose Python infrastructure (aiohttp, Pillow, SciPy,
       botocore, Celery and more). Each is a real bug found by reading the code, reproduced
       against a clean install, and sent upstream with a root cause, a fix, and a
-      failing-then-passing test. Two PRs of mine have landed; four more bugs I reported were
+      failing-then-passing test. Four PRs of mine have landed; four more bugs I reported were
       independently fixed upstream by the projects themselves; the rest are filed and open.
       <b>&ldquo;Merged&rdquo; means a merged pull request I authored &mdash; that is exactly
-      two.</b> <a href="oss/">The full audited record, with method and per-finding
+      four.</b> <a href="oss/">The full audited record, with method and per-finding
       write-ups &rarr;</a>
     </p>
     <div class="grid">
@@ -752,6 +752,20 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="name">spikingjelly #743</div>
         <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
         <div class="desc">A neuron&rsquo;s registered reset values are plain attributes, not buffers, so <code>.to()</code> / <code>.half()</code> never moves them. After <code>net.half()</code>, <code>reset()</code> writes a float32 value back into a float16 state. Fix threads the transform through the reset-value store.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/744">
+        <div class="name">spikingjelly #744</div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc"><code>MSTDPLearner</code> allocated its eligibility trace with no explicit dtype, defaulting to float32 regardless of the synapse&rsquo;s own precision &mdash; a float16 synapse under mSTDP raised a grad-dtype mismatch on write. Fix threads the synapse&rsquo;s device and dtype through both the eligibility buffer and the reward tensor.</div>
+        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/750">
+        <div class="name">spikingjelly #750</div>
+        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
+        <div class="desc">New resonate-and-fire neuron (Izhikevich 2001) for the neuron zoo &mdash; proposed as an issue first, implemented to the maintainer&rsquo;s design spec after sign-off: fixed oscillator parameters, two real-valued states, fires on the voltage component, single documented reset rule.</div>
         <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
@@ -924,16 +938,13 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
     <p class="disclaimer">
       Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
       sum across the 27 repositories listed. Upstream, status re-checked live via
-      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-05: two merged pull requests I
-      authored (spikingjelly&nbsp;#743, kornia&nbsp;#4210); 29 pull requests, issues, or discussions filed and open.
-      Separately, four bugs I reported were fixed and merged upstream by other contributors, not by
-      a PR of mine: snnTorch (issue&nbsp;#430, the <code>LSO</code> surrogate, fixed via PRs
-      #374/#418), SciPy (issue&nbsp;#26095, <code>optimize.milp</code> mutating the caller&rsquo;s
-      options dict, fixed via PR&nbsp;#26097), aiohttp (issue&nbsp;#13634, <code>CookieJar</code>
-      aliasing a <code>Morsel</code>, fixed via PR&nbsp;#13637), and Pillow (issue&nbsp;#9963,
-      <code>Image.copy()</code> aliasing list-valued <code>.info</code> entries, fixed via
-      PR&nbsp;#9964). &ldquo;Merged&rdquo; on this page always means a merged pull request authored
-      by me. Full per-finding record and live status: <a href="oss/">/oss</a>.
+      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-06: four merged pull requests I
+      authored (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210). Separately, three bugs I
+      reported were fixed and merged upstream by other contributors, not by a PR of mine: SciPy
+      (issue&nbsp;#26095, fixed via PR&nbsp;#26097), aiohttp (issue&nbsp;#13634, fixed via
+      PR&nbsp;#13637), and Pillow (issue&nbsp;#9963, fixed via PR&nbsp;#9964). &ldquo;Merged&rdquo;
+      on this page always means a merged pull request authored by me. Full per-finding record and
+      live status: <a href="oss/">/oss</a>.
     </p>
   </div>
 </footer>
