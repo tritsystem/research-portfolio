@@ -818,10 +818,38 @@ footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
         <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
       </a>
 
+      <a class="card" href="https://github.com/kornia/kornia/pull/4319">
+        <div class="name">kornia #4319</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc"><code>RenderingDeFMO.times</code> is a plain attribute, not a registered buffer, so <code>.to()</code>/<code>.half()</code> never move it; <code>forward</code> re-derives only its device from the input, never its dtype, so a half-precision forward pass crashes on the stale float32 buffer. Fix registers it as a non-persistent buffer, same convention as the sibling #4079 fix.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/kornia/kornia/pull/4336">
+        <div class="name">kornia #4336</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc"><code>bbox_to_mask</code>&rsquo;s pixel-index grid is built at the caller&rsquo;s own dtype. float16 can&rsquo;t hold consecutive integers past 2048, so a float16 <code>boxes</code> on an image taller or wider than that silently mismasks rows or columns near the collapse. Fix builds the grid at a fixed float32 regardless of caller dtype; promotion handles the rest.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/ultralytics/ultralytics/pull/26075">
+        <div class="name">ultralytics #26075</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc">SAM3&rsquo;s relative-position-bias coordinate cache keys on <code>(H, W)</code> alone. A same-size call in a different dtype &mdash; a float32 warm-up forward, then a half-precision inference forward &mdash; silently reuses stale-dtype coordinates and crashes the (correctly half-precision) embedding layer that consumes them. Fix extends the cache key to include device and dtype.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="https://github.com/lucidrains/denoising-diffusion-pytorch/pull/370">
+        <div class="name">lucidrains &times;3 &mdash; SinusoidalPosEmb</div>
+        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
+        <div class="desc">The timestep embedding shared across several lucidrains diffusion repos has no parameters, so <code>.half()</code> never touches it &mdash; it keeps emitting float32 regardless of the standard <code>long</code> timestep input, and crashes the next half-precision layer. Found duplicated verbatim in three repos, same fix in each: denoising-diffusion-pytorch&nbsp;#370, video-diffusion-pytorch&nbsp;#40, imagen-pytorch&nbsp;#392.</div>
+        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
+      </a>
+
       <a class="card" href="oss/">
-        <div class="name">&hellip; and 7 more</div>
+        <div class="name">&hellip; and 8 more</div>
         <div class="meta"><span class="lang">record</span><span>filed</span></div>
-        <div class="desc">perceiver-pytorch&nbsp;#70, torchaudio&nbsp;#4228, reservoirpy&nbsp;#245, pytorch-esn&nbsp;#27, tenns-core&nbsp;#1, sinabs&nbsp;#336, librosa&nbsp;#2099 &mdash; each with a root cause, a reproduction, a fix, and a regression test. Method overview and honest-negatives list included.</div>
+        <div class="desc">kornia&nbsp;#4337, perceiver-pytorch&nbsp;#70, torchaudio&nbsp;#4228, reservoirpy&nbsp;#245, pytorch-esn&nbsp;#27, tenns-core&nbsp;#1, sinabs&nbsp;#336, librosa&nbsp;#2099 &mdash; each with a root cause, a reproduction, a fix, and a regression test. Method overview and honest-negatives list included.</div>
         <div class="foot"><span>the full record</span><span class="arw">&rarr;</span></div>
       </a>
 
