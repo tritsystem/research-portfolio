@@ -50,8 +50,12 @@ reproduction, and its status. If you are checking a claim, start there.
 
 ## Status, and what "contributed" means
 
-Only a **merged** pull request is a contribution. As of 2026-09-04 that is
-**one**: spikingjelly #743. The rest are filed and open — genuine reproduced
-bugs with fixes and tests, awaiting maintainer review. This page re-checks
-every status with `gh pr view` before it is updated, and says "filed" or
-"reported" everywhere it is not "merged".
+Only a **merged** pull request is a contribution. As of **2026-09-07** that is
+**nine** sole-authored — spikingjelly #743, #744, #750; kornia #4210, #4299,
+#4303, #4319; ultralytics #26075; celery #10571 — plus **one** merged as a
+credited contribution to another author's feature PR (ultralytics #26083).
+The rest are filed and open — genuine reproduced bugs with fixes and tests,
+awaiting maintainer review — or closed without a merged fix. This page
+re-checks every status with `gh pr view` before it is updated, and says
+"filed" or "reported" everywhere it is not "merged". See `README.md` for the
+full row-by-row status.

@@ -16,7 +16,7 @@ credited to them, not claimed. A finding closed by a maintainer (technical
 disagreement, "won't fix," or a blanket policy against AI-assisted
 contributions) is recorded as **closed/declined**, not silently dropped.
 Status is re-checked live via `gh api`/`gh pr view` before every update —
-last full re-check: 2026-09-06.
+last full re-check: 2026-09-07.
 
 ---
 
@@ -26,7 +26,7 @@ last full re-check: 2026-09-06.
 |--:|------|--------|--------|
 | 1 | **fangwei123456/spikingjelly** | [#743](https://github.com/fangwei123456/spikingjelly/pull/743) — `MemoryModule._apply`/reset-values don't move with the module on `.to()` | **MERGED** 2026-09-03 |
 | 2 | fangwei123456/spikingjelly | [#744](https://github.com/fangwei123456/spikingjelly/pull/744) — `MSTDPLearner` builds its eligibility trace with no `dtype` | **MERGED** 2026-09-06 (maintainer's own follow-up commit also fixed the `reward` tensor's dtype/device, beyond the original submission) |
-| 3 | fangwei123456/spikingjelly | [#745](https://github.com/fangwei123456/spikingjelly/pull/745) — neuron dtype-invariance regression tests | filed (open) |
+| 3 | fangwei123456/spikingjelly | [#745](https://github.com/fangwei123456/spikingjelly/pull/745) — neuron dtype-invariance regression tests | **closed**, not merged (2026-09-07) |
 | 4 | fangwei123456/spikingjelly | [#750](https://github.com/fangwei123456/spikingjelly/pull/750) — `RAFNode` (resonate-and-fire neuron), maintainer-spec'd feature, closes [#746](https://github.com/fangwei123456/spikingjelly/issues/746) | **MERGED** 2026-09-06 — *feature, not a bug fix* |
 | 5 | jeshraghian/snntorch | [#441](https://github.com/jeshraghian/snntorch/pull/441) + issues [#442](https://github.com/jeshraghian/snntorch/issues/442)/[#443](https://github.com/jeshraghian/snntorch/issues/443) — `LeakyParallel` silently drops a per-neuron `beta`; `SpikingNeuron.zeros()` is a no-op | filed (open) |
 | 6 | jeshraghian/snntorch | [#430](https://github.com/jeshraghian/snntorch/issues/430) — `surrogate.LSO()` wraps the wrong autograd `Function` | **reported; fixed upstream by others** (PRs #374/#418, merged; closed COMPLETED) |
@@ -46,9 +46,9 @@ last full re-check: 2026-09-06.
 | 20 | pallets/click | [#3838](https://github.com/pallets/click/issues/3838) — mutable default leaks across `CliRunner.invoke()` | **closed/declined** — Pallets' blanket no-AI-contributions policy, not a technical rebuttal |
 | 21 | pallets/jinja | [#2263](https://github.com/pallets/jinja/issues/2263) — `overlay()` shares filters/globals/tests instead of copying | **closed/declined** — same Pallets policy |
 | 22 | pallets/werkzeug | [#3264](https://github.com/pallets/werkzeug/issues/3264) — `Response`/`EnvironBuilder(headers=...)` alias the same `Headers` instance | **closed/declined** — same Pallets policy |
-| 23 | fastapi/sqlmodel | [#2087](https://github.com/fastapi/sqlmodel/issues/2087) — `model_copy(deep=False)` shares SQLAlchemy state on a persisted instance | filed (open) |
+| 23 | fastapi/sqlmodel | [#2087](https://github.com/fastapi/sqlmodel/issues/2087) — `model_copy(deep=False)` shares SQLAlchemy state on a persisted instance | **closed** — converted to [discussion #2089](https://github.com/fastapi/sqlmodel/discussions/2089) by maintainer YuriiMotov (2026-09-07); no code fix. Analysis narrowed the root cause (pydantic `model_copy` bypasses `SQLModel.__setattr__`, so SQLAlchemy instrumentation never fires; `deep=True` also affected). |
 | 24 | boto/botocore | [#3792](https://github.com/boto/botocore/issues/3792) — `Config.merge()` aliases nested option dicts | filed (open) |
-| 25 | celery/celery | [#10560](https://github.com/celery/celery/issues/10560) — `Signature.clone()` aliases `.kwargs` | filed (open) |
+| 25 | celery/celery | [#10560](https://github.com/celery/celery/issues/10560) — `Signature.clone()` aliases `.kwargs` (no-override branch + `_merge` + immutable short-circuit all pass `self.kwargs` by reference) → PR [#10571](https://github.com/celery/celery/pull/10571) (shallow-copy fix + tests; competing with a stalled 3rd-party `deepcopy` PR) | **MERGED** 2026-09-07 — the fix also resolved a 5-year-old open bug, [#6734](https://github.com/celery/celery/issues/6734) (nested group→chord→chain-body `GroupResult` never resolves) |
 | 26 | python-pillow/Pillow | [#9963](https://github.com/python-pillow/Pillow/issues/9963) — `Image.copy()`/`transform()` alias list-valued `.info` entries | **reported; fixed upstream by others** (maintainer Andrew Murray, PR [#9964](https://github.com/python-pillow/Pillow/pull/9964); merged 2026-09-05) |
 | 27 | aio-libs/aiohttp | [#13634](https://github.com/aio-libs/aiohttp/issues/13634) — `CookieJar.update_cookies()` aliases a `Morsel` | **reported; fixed upstream by others** (maintainer Sam Bull, PR [#13637 "Fix mutable morsels"](https://github.com/aio-libs/aiohttp/pull/13637); merged 2026-09-05) |
 | 28 | scipy/scipy | [#26095](https://github.com/scipy/scipy/issues/26095) — `milp()` mutates the caller's options dict | **reported; fixed upstream by others** (maintainer j-bowhay, PR #26097; closed) |
@@ -57,7 +57,7 @@ last full re-check: 2026-09-06.
 | 31 | sympy/sympy | [#30420](https://github.com/sympy/sympy/issues/30420) — `_constructor_postprocessor_mapping` registrations silently ignored due to a stale `@cacheit` cache | filed (open) |
 | 32 | apache/airflow | [#72544](https://github.com/apache/airflow/issues/72544) — `executor_config` aliased from a shared `default_args` dict | filed (open) |
 | 33 | apache/arrow | [#51162](https://github.com/apache/arrow/issues/51162) — `Table.from_pandas()` zero-copy path isn't visible to pandas 3.0's Copy-on-Write tracker | filed (open) |
-| 34 | fastapi/fastapi | [#16301](https://github.com/fastapi/fastapi/issues/16301) — direct `APIRouter.routes` mutation bypasses the route cache's version counter | filed (open) |
+| 34 | fastapi/fastapi | [#16301](https://github.com/fastapi/fastapi/issues/16301) — direct `APIRouter.routes` mutation bypasses the route cache's version counter | **closed** (COMPLETED) 2026-09-07 — no merged fix yet; three community PRs open ([#16305](https://github.com/fastapi/fastapi/pull/16305)/[#16306](https://github.com/fastapi/fastapi/pull/16306)/[#16326](https://github.com/fastapi/fastapi/pull/16326)), each restating the reported root cause |
 | 35 | jpadilla/pyjwt | `options` dict mutation, a regression of a previously-fixed issue | **private security advisory submitted** (`GHSA-gvp8-978c-rx2q`, state: triage) |
 | 36 | python-jsonschema/jsonschema | [#1573](https://github.com/python-jsonschema/jsonschema/issues/1573) — deprecated `RefResolver`'s subschema cache never invalidates | **closed/declined** — maintainer Julian Berman: deprecated API, not worth fixing (a legitimate call, not disputed) |
 | 37 | ansible/ansible | [#87492](https://github.com/ansible/ansible/issues/87492) — `VariableManager.set_host_facts()` aliases the caller's dict across hosts with no prior cache entry | filed (open) |
@@ -67,13 +67,14 @@ last full re-check: 2026-09-06.
 | 41 | getsentry/sentry | Cross-tenant slug→pk pointer-cache staleness after a `post_init`-bypassing rename | **private disclosure** — no public tracker; disclosure email sent to `security@sentry.io` 2026-09-05, verified via a standalone Django reproduction (the `sentry` package itself couldn't be imported standalone) |
 | 42 | kornia/kornia | [#4299](https://github.com/kornia/kornia/pull/4299) — `solve_cubic`'s three-real-roots branch differentiates `acos` at its own domain boundary; value is fine, gradient diverges | **MERGED** 2026-09-06 |
 | 43 | kornia/kornia | [#4303](https://github.com/kornia/kornia/pull/4303) — `bbox_to_mask3d` unions three axis slabs and tries to recover the intersection with a three-way reduction, which fills the whole volume when any slab covers a full axis | **MERGED** 2026-09-06 |
-| 44 | kornia/kornia | [#4319](https://github.com/kornia/kornia/pull/4319) — `RenderingDeFMO.times` is a plain attribute, not a registered buffer; `.half()` leaves it float32 and the first forward crashes | filed (open) — maintainer approved the change; a follow-up review requested an `Unreleased`/Bug fixes changelog citation, which has since been added; re-review requested 2026-09-06 |
-| 45 | kornia/kornia | [#4336](https://github.com/kornia/kornia/pull/4336) — `bbox_to_mask`'s pixel-index grid is built at the caller's own dtype; float16 can't hold consecutive integers past 2048, so a float16 `boxes` on an image taller/wider than that silently mismasks rows or columns near the collapse | filed (open) |
-| 46 | kornia/kornia | [#4337](https://github.com/kornia/kornia/pull/4337) — `RandomChannelDropout.fill_value`/`RandomGaussianBlurGenerator.sigma` are plain attributes, not registered buffers (both device and dtype already re-derived inline, so a hygiene/checkpoint-visibility gap, not a crash) | filed (open) |
-| 47 | ultralytics/ultralytics | [#26075](https://github.com/ultralytics/ultralytics/pull/26075) — SAM3 `TransformerDecoder`'s box-relative-position-bias coordinate cache keys on `(H, W)` alone; a same-size call in a different dtype (a float32 warm-up forward, then a half-precision inference forward) silently reuses stale-dtype coordinates and crashes the half-precision embedding layer that consumes them | filed (open) |
+| 44 | kornia/kornia | [#4319](https://github.com/kornia/kornia/pull/4319) — `RenderingDeFMO.times` is a plain attribute, not a registered buffer; `.half()` leaves it float32 and the first forward crashes | **MERGED** 2026-09-07 (rebased onto `main`, CI 40/40, maintainer ducha-aiki cleared the stale changes-requested with a fresh approval) |
+| 45 | kornia/kornia | [#4336](https://github.com/kornia/kornia/pull/4336) — `bbox_to_mask`'s pixel-index grid is built at the caller's own dtype; float16 can't hold consecutive integers past 2048, so a float16 `boxes` on an image taller/wider than that silently mismasks rows or columns near the collapse | filed (open) — maintainer review "APPROVE after 2 edits" (CHANGELOG entry + pin bfloat16); both pushed 2026-09-07 |
+| 46 | kornia/kornia | [#4337](https://github.com/kornia/kornia/pull/4337) — `RandomChannelDropout.fill_value`/`RandomGaussianBlurGenerator.sigma` are plain attributes, not registered buffers (both device and dtype already re-derived inline, so a hygiene/checkpoint-visibility gap, not a crash) | filed (open) — maintainer review "APPROVE after 1 CHANGELOG sentence"; pushed 2026-09-07 |
+| 47 | ultralytics/ultralytics | [#26075](https://github.com/ultralytics/ultralytics/pull/26075) — SAM3 `TransformerDecoder`'s box-relative-position-bias coordinate cache keys on `(H, W)` alone; a same-size call in a different dtype (a float32 warm-up forward, then a half-precision inference forward) silently reuses stale-dtype coordinates and crashes the half-precision embedding layer that consumes them | **MERGED** 2026-09-07 (by maintainer glenn-jocher) |
 | 48 | lucidrains/denoising-diffusion-pytorch | [#370](https://github.com/lucidrains/denoising-diffusion-pytorch/pull/370) — `SinusoidalPosEmb` has no parameters, so `.half()` never touches it; it keeps emitting float32 regardless of the standard `long` timestep input and crashes the next half-precision layer | filed (open) |
 | 49 | lucidrains/video-diffusion-pytorch | [#40](https://github.com/lucidrains/video-diffusion-pytorch/pull/40) — same `SinusoidalPosEmb` bug, byte-identical class body, found by checking sibling repos for the same duplicated utility | filed (open) |
 | 50 | lucidrains/imagen-pytorch | [#392](https://github.com/lucidrains/imagen-pytorch/pull/392) — same bug, present twice in one repo (`imagen_pytorch.py` image variant and `imagen_video.py` video variant); this repo documents `accelerate` mixed precision as an officially supported path, so the crash is reachable via the documented API, not just a manual `.half()` call | filed (open) |
+| 51 | ultralytics/ultralytics | [#26083](https://github.com/ultralytics/ultralytics/pull/26083) — INT8 quantization-aware training via `quantize=8` in `train` mode (author: `Bovey0809`) | **MERGED** 2026-09-07 — *contribution, not sole-authored; feature, not a bug fix.* Credited alongside the author and others in the merge notice for independent exported-TensorRT-engine and two-GPU DDP-resume validation, and for holding the feature justification for a second model size before landing it (QAT gives a predictable INT8 floor where TensorRT's own calibrator is unreliable, +2.99 mAP50-95 on `yolo26s`, ~0 on `yolo26n`). |
 
 **Confirmed fixes — bugs reported here, fixed upstream by the maintainer**
 (none of these are our merged code; each is a real defect reported, then
@@ -96,12 +97,15 @@ autonomous filing):
 - **Home Assistant** — a state-cache staleness finding, held back given the
   project's blanket AI-policy block (same category as scikit-learn).
 
-**Tally, 2026-09-06:** 6 merged (own) · 4 reported and fixed upstream by
-others · 34 filed and open (PR, issue, or discussion) · 3 closed/declined on
+**Tally, 2026-09-07:** 9 merged (own) · 1 merged (a contribution to another
+author's feature PR — ultralytics #26083) · 4 reported and fixed upstream by
+others · 28 filed and open (PR, issue, or discussion) · 3 closed/declined on
 a blanket AI-contribution policy (not technical) · 1 closed/declined on a
-maintainer's technical judgment call · 2 private security disclosures
-(1 formal advisory in triage, 1 email sent directly) · 4 drafted, held back
-pending personal review under the target project's own AI policy.
+maintainer's technical judgment call · 3 closed without a merged fix
+(spikingjelly #745 superseded; sqlmodel #2087 converted to a discussion;
+fastapi #16301 closed with community PRs still open) · 2 private security
+disclosures (1 formal advisory in triage, 1 email sent directly) · 4 drafted,
+held back pending personal review under the target project's own AI policy.
 
 Also **audited and deliberately not filed** (see `METHODOLOGY.md` §"honest
 negatives"): `pytorch/_refs`, `torchmetrics`, `diffusers.schedulers`,
