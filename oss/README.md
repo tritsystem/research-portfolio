@@ -75,6 +75,7 @@ last full re-check: 2026-09-07.
 | 49 | lucidrains/video-diffusion-pytorch | [#40](https://github.com/lucidrains/video-diffusion-pytorch/pull/40) — same `SinusoidalPosEmb` bug, byte-identical class body, found by checking sibling repos for the same duplicated utility | filed (open) |
 | 50 | lucidrains/imagen-pytorch | [#392](https://github.com/lucidrains/imagen-pytorch/pull/392) — same bug, present twice in one repo (`imagen_pytorch.py` image variant and `imagen_video.py` video variant); this repo documents `accelerate` mixed precision as an officially supported path, so the crash is reachable via the documented API, not just a manual `.half()` call | filed (open) |
 | 51 | ultralytics/ultralytics | [#26083](https://github.com/ultralytics/ultralytics/pull/26083) — INT8 quantization-aware training via `quantize=8` in `train` mode (author: `Bovey0809`) | **MERGED** 2026-09-07 — *contribution, not sole-authored; feature, not a bug fix.* Credited alongside the author and others in the merge notice for independent exported-TensorRT-engine and two-GPU DDP-resume validation, and for holding the feature justification for a second model size before landing it (QAT gives a predictable INT8 floor where TensorRT's own calibrator is unreliable, +2.99 mAP50-95 on `yolo26s`, ~0 on `yolo26n`). |
+| 52 | lucidrains/CoCa-pytorch | [#22](https://github.com/lucidrains/CoCa-pytorch/pull/22) — `RotaryEmbedding.forward` builds the position `arange` at `inv_freq.dtype`; under `.half()`/`.bfloat16()` the position grid is low-precision, so distinct positions past 2048 / 256 collapse onto the same rotary frequency (`RotaryEmbedding(dim=64).half()` gives only 33/64 distinct positions over `[2048, 2112)`). Same bug class + fix as the merged `rotary-embedding-torch#50`. | filed (open) 2026-09-07 — repo dormant since 2023-12 |
 
 **Confirmed fixes — bugs reported here, fixed upstream by the maintainer**
 (none of these are our merged code; each is a real defect reported, then
@@ -99,7 +100,7 @@ autonomous filing):
 
 **Tally, 2026-09-07:** 9 merged (own) · 1 merged (a contribution to another
 author's feature PR — ultralytics #26083) · 4 reported and fixed upstream by
-others · 28 filed and open (PR, issue, or discussion) · 3 closed/declined on
+others · 29 filed and open (PR, issue, or discussion) · 3 closed/declined on
 a blanket AI-contribution policy (not technical) · 1 closed/declined on a
 maintainer's technical judgment call · 3 closed without a merged fix
 (spikingjelly #745 superseded; sqlmodel #2087 converted to a discussion;
