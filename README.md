@@ -1,22 +1,15 @@
-# Research portfolio — Trits, Spikes & Phonons
-
-Independent research in unconventional computing: ternary logic, spiking neural
-networks, phononic reservoirs, and what happens when you put those ideas inside
-real software, games, and a from-scratch kernel. Every result measured; negative
-results reported as carefully as the positives.
+# Gavin Branaa (tritsystem): ML security and low-level systems research
 
 **Live:** https://tritsystem.github.io/research-portfolio/
 
-Single self-contained `index.html` (served via GitHub Pages). MethodLM-themed.
+One self-contained `index.html`, served by GitHub Pages, covering:
 
-## Tools
+- **The record:** 35 merged fixes and features across 16 projects (71% of decided PRs, median 3.4 days to merge), one published advisory (PyJWT, GHSA-gvp8-978c-rx2q), and 7 reported bugs fixed by maintainers. Figures are as of 2026-11-04, and only merged PRs are counted.
+- **Security and correctness work by bug class**, from C/C++ memory safety and network-daemon correctness to silent precision loss in ML libraries, plus the open GPU memory-safety work in bitsandbytes.
+- **Low-level systems** (spikeling-os, the native seam audit), **ML research** with its negative results, and **the tools** built for the hunt.
+- **How I learn:** [the Method](METHOD.md), the T0-T5 evidence ladder, the ML security curriculum and ladders, and the research vault.
+- **How it fits together:** an interactive map in which every link is one a repository or document actually shows, with the full list and sources under it.
 
-- **[reagent](https://github.com/tritsystem/reagent)** — a two-stage assay for
-  bugs in Python (and some C) code: cheap AST nomination, then a dynamic
-  probe that imports, constructs, and drives the real code. 40 detectors,
-  most general-purpose, a subset ML/scientific-Python-specific.
+Fix-by-fix detail: [sec-portfolio](https://tritsystem.github.io/sec-portfolio/). AI use: [AI_DISCLOSURE.md](AI_DISCLOSURE.md).
 
-  **Merged upstream:** kornia (9), snntorch (4), spikingjelly (3),
-  celery, ultralytics, DeepSpeed, ansible, and cfengine/core.
-  **Filed / under review:** peft, timm, x-transformers, norse, and librosa.
-  (Only merged PRs are counted as merged; the rest are open or superseded.)
+Until 2026-11-04 this repo hosted *Trits, Spikes & Phonons*, a page framed around unconventional computing. It is still in the git history.

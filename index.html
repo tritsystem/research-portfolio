@@ -1,1065 +1,292 @@
-<title>Trits, Spikes & Phonons</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap">
-
+<title>Gavin Branaa (tritsystem): ML security and low-level systems research</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
 <style>
-/* ----- MethodLM-themed: ember on near-black, glassy panels, ledger-tape ----- */
-:root{
-  --vac:#0a0603;
-  --vac2:#150b04;
-  --panel:rgba(34,20,9,.62);
-  --raise:rgba(48,28,13,.55);
-  --edge:rgba(255,150,60,.16);
-  --edge2:rgba(255,150,60,.34);
-  --ink:#ffece0;
-  --soft:#e6b98f;
-  --faint:#a5744a;
-  --ember:#ff7518;
-  --ember-bright:#ff9d3c;
-  --gold:#ffca3a;
-  --amber:#ff8c1a;
-  --red:#ff4d3d;
-  --mono:"JetBrains Mono",ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
-  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --serif:"IBM Plex Serif",Georgia,serif;
-  --glow:0 0 16px rgba(255,120,25,.26);
-  --shadow:0 1px 0 rgba(255,180,120,.05),0 22px 48px -26px rgba(0,0,0,.8);
-}
-
+:root{--bg:#fbfbfd;--fg:#1b1b1f;--muted:#5f6069;--line:#e4e4ea;--card:#fff;--accent:#1f5fd0;--ok:#1f7a3a;--warn:#9a6a00;
+--g-learn:#2a78d6;--g-method:#eb6834;--g-tools:#1baf7a;--g-find:#eda100;--g-research:#e87ba4;--edge:#b9bac4;--edge-hi:#1b1b1f}
+@media (prefers-color-scheme:dark){:root{--bg:#111216;--fg:#e9e9ee;--muted:#9aa0ac;--line:#262830;--card:#181a20;--accent:#7aa7ff;--ok:#5cc27a;--warn:#e0b04a;
+--g-learn:#3987e5;--g-method:#d95926;--g-tools:#199e70;--g-find:#c98500;--g-research:#d55181;--edge:#3a3c46;--edge-hi:#e9e9ee}}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;
-  color:var(--ink);
-  background:
-    radial-gradient(1100px 520px at 78% -8%, rgba(255,120,25,.10), transparent 60%),
-    radial-gradient(900px 600px at 0% 100%, rgba(255,90,26,.06), transparent 55%),
-    var(--vac);
-  background-attachment:fixed;
-  font-family:var(--sans);
-  font-size:16px;
-  line-height:1.62;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-}
-::selection{background:rgba(255,120,25,.32);color:#fff}
-a{color:inherit}
-h1,h2,h3{font-weight:600;text-wrap:balance;margin:0}
-p{margin:0}
-
-.mono{font-family:var(--mono)}
-.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
-.prose{max-width:660px}
-
-/* ---------- top bar ---------- */
-.topbar{
-  position:sticky;top:0;z-index:20;
-  background:linear-gradient(180deg,rgba(10,6,3,.92),rgba(10,6,3,.66));
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--edge);
-}
-.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:54px}
-.brand{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;font-weight:600;color:var(--ink)}
-.brand .dim{color:var(--faint);font-weight:400}
-.topnav{display:flex;gap:20px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
-.topnav a{color:var(--soft);text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;transition:color .15s,border-color .15s,text-shadow .15s}
-.topnav a:hover,.topnav a:focus-visible{color:var(--ember-bright);border-color:var(--ember);text-shadow:0 0 12px rgba(255,157,60,.5)}
-.topnav a:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
-@media(max-width:760px){.topnav{display:none}}
-
-/* ---------- hero ---------- */
-.hero{position:relative;border-bottom:1px solid var(--edge);overflow:hidden}
-.hero .wrap{position:relative;z-index:2;padding-top:84px;padding-bottom:66px}
-#raster{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.6}
-.eyebrow{
-  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--ember-bright);font-weight:600;
-}
-.hero h1{
-  font-family:var(--mono);
-  font-weight:600;
-  font-size:clamp(1.9rem,4.4vw,3.15rem);
-  line-height:1.08;
-  letter-spacing:-.02em;
-  margin:20px 0 0;
-  max-width:15ch;
-  color:#fff;
-}
-.hero h1 em{font-style:normal;color:var(--ember-bright);text-shadow:0 0 26px rgba(255,120,25,.45)}
-.hero .lede{margin-top:22px;max-width:52ch;font-size:1.06rem;color:var(--soft)}
-.statstrip{
-  margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid var(--edge);border-radius:14px;overflow:hidden;
-  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
-}
-.statstrip div{padding:17px 18px;border-right:1px solid var(--edge)}
-.statstrip div:last-child{border-right:0}
-.statstrip .n{font-family:var(--mono);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink)}
-.statstrip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:5px}
-@media(max-width:640px){
-  .statstrip{grid-template-columns:repeat(2,1fr)}
-  .statstrip div:nth-child(2){border-right:0}
-  .statstrip div:nth-child(1),.statstrip div:nth-child(2){border-bottom:1px solid var(--edge)}
-}
-
-/* ---------- section scaffold ---------- */
-section{border-bottom:1px solid var(--edge);padding:66px 0}
-.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
-.sec-tag{
-  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--ember-bright);font-weight:600;white-space:nowrap;
-}
-.sec-count{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:auto;letter-spacing:.04em}
-h2.sec-title{font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.015em;margin:6px 0 0;color:var(--ink)}
-.sec-intro{margin-top:14px;color:var(--soft);max-width:64ch}
-
-/* ---------- narrative ---------- */
-.narr{padding-top:66px}
-.narr h3{
-  font-family:var(--mono);font-size:.95rem;font-weight:700;
-  letter-spacing:.01em;margin:34px 0 10px;color:var(--ember-bright);
-}
-.narr h3:first-of-type{margin-top:26px}
-.narr p+p{margin-top:14px}
-.narr .prose{color:var(--soft)}
-.narr .prose strong{color:var(--ink);font-weight:600}
-.epigraph{
-  margin:30px 0 6px;padding:20px 26px;border-left:2px solid var(--ember);
-  background:var(--panel);backdrop-filter:blur(9px);border-radius:0 12px 12px 0;
-}
-.epigraph p{font-family:var(--serif);font-size:1.12rem;line-height:1.5;font-style:italic;color:var(--ink)}
-.epigraph .attr{font-family:var(--mono);font-style:normal;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:10px}
-.callout{
-  margin-top:28px;padding:16px 18px;border:1px dashed var(--edge2);border-radius:12px;
-  font-size:.9rem;color:var(--soft);background:var(--raise);
-}
-.callout b{font-family:var(--mono);color:var(--ember-bright);font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:4px}
-.timeline{margin-top:24px;display:grid;gap:0;border-top:1px solid var(--edge)}
-.timeline .row{display:grid;grid-template-columns:92px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid var(--edge)}
-.timeline .when{font-family:var(--mono);font-size:11.5px;color:var(--ember-bright);letter-spacing:.03em;padding-top:2px}
-.timeline .what{color:var(--soft);font-size:.94rem}
-.timeline .what b{color:var(--ink);font-weight:600}
-
-/* ---------- repo grid ---------- */
-.grid{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fill,minmax(276px,1fr));gap:16px}
-.card{
-  display:flex;flex-direction:column;
-  background:var(--panel);backdrop-filter:blur(9px);
-  border:1px solid var(--edge);border-radius:14px;
-  padding:18px 18px 15px;text-decoration:none;color:inherit;
-  transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease;
-}
-.card:hover,.card:focus-visible{border-color:var(--edge2);transform:translateY(-3px);box-shadow:var(--glow),var(--shadow)}
-.card:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
-.card .name{font-family:var(--mono);font-size:.98rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
-.card:hover .name{color:var(--ember-bright)}
-.card .meta{
-  margin-top:8px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;
-  font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.03em;
-}
-.card .meta .lang::before{content:"";display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--ember);border-radius:50%;vertical-align:1px;box-shadow:0 0 8px rgba(255,120,25,.6)}
-.card .meta .lock{color:var(--amber)}
-.card .desc{margin-top:11px;font-size:.9rem;line-height:1.5;color:var(--soft);flex:1}
-.card .foot{
-  margin-top:13px;padding-top:10px;border-top:1px solid var(--edge);
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);
-}
-.card .foot .arw{color:var(--ember-bright);transition:transform .18s}
-.card:hover .foot .arw{transform:translateX(4px)}
-.card .lineage{
-  margin-top:11px;font-family:var(--mono);font-size:10px;line-height:1.55;
-  letter-spacing:.02em;color:var(--faint);
-}
-.card .lineage .from{
-  color:var(--ember-bright);text-transform:uppercase;letter-spacing:.07em;font-weight:600;
-}
-.card .lineage .to::before{content:" \2192 ";color:var(--faint)}
-
-/* ---------- lineage map ---------- */
-.lineage-map{
-  margin-top:30px;border:1px solid var(--edge);border-radius:14px;
-  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
-  padding:22px 20px 20px;overflow-x:auto;
-}
-.lineage-map pre{
-  margin:0;font-family:var(--mono);font-size:12px;line-height:1.9;
-  white-space:pre;color:var(--soft);min-width:660px;
-}
-.lineage-map b.root{color:#fff;font-weight:700}
-.lineage-map b.hinge{color:var(--ember-bright);font-weight:600}
-.lineage-map b.thread{color:var(--gold);font-weight:600;letter-spacing:.06em}
-.lineage-map b.node{color:var(--ink);font-weight:600}
-.lineage-map span.tw{color:var(--faint)}
-.lineage-map .rule{color:var(--edge2)}
-.map-foot{margin-top:14px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.03em}
-
-/* ---------- results ledger (methodlm ledger-tape look) ---------- */
-.ledger-scroll{
-  margin-top:30px;overflow-x:auto;border:1px solid var(--edge);border-radius:14px;
-  background:var(--panel);backdrop-filter:blur(9px);box-shadow:var(--shadow);
-}
-table.ledger{width:100%;border-collapse:collapse;min-width:720px}
-.ledger th{
-  text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--faint);font-weight:600;
-  padding:14px 16px;border-bottom:1px solid var(--edge2);white-space:nowrap;
-  background:rgba(14,8,3,.5);
-}
-.ledger td{padding:15px 16px;border-bottom:1px solid var(--edge);vertical-align:top;font-size:.92rem;color:var(--soft)}
-.ledger tr:last-child td{border-bottom:0}
-.ledger tr:hover td{background:rgba(255,120,25,.04)}
-.ledger .finding{font-weight:600;color:var(--ink);max-width:26ch}
-.ledger .domain{font-family:var(--mono);font-size:11px;color:var(--soft);white-space:nowrap}
-.ledger .measure{color:var(--soft);max-width:46ch}
-.pill{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  text-transform:uppercase;padding:3px 9px;border:1px solid currentColor;border-radius:999px;white-space:nowrap;
-}
-.pill::before{content:"";width:6px;height:6px;background:currentColor;border-radius:50%;box-shadow:0 0 8px currentColor}
-.pill.confirmed{color:var(--gold)}
-.pill.negative{color:var(--amber)}
-.pill.boundary{color:var(--ember-bright)}
-.pill.open{color:var(--faint)}
-.legend{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px 20px;font-size:.82rem;color:var(--soft)}
-.legend span{display:inline-flex;align-items:center;gap:7px}
-.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
-
-/* ---------- footer ---------- */
-footer{padding:58px 0 74px}
-footer .prose{color:var(--soft)}
-footer h2{font-family:var(--mono);font-size:1.2rem;font-weight:600;color:var(--ink)}
-footer a.big{
-  display:inline-block;margin-top:18px;font-family:var(--mono);font-size:.95rem;
-  color:var(--ember-bright);text-decoration:none;border-bottom:1px solid var(--ember);padding-bottom:2px;
-  transition:text-shadow .15s;
-}
-footer a.big:hover{text-shadow:0 0 14px rgba(255,157,60,.55)}
-footer a.big:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
-.disclaimer{margin-top:28px;font-family:var(--mono);font-size:11px;color:var(--faint);line-height:1.7}
-
-@media (prefers-reduced-motion:reduce){
-  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
-}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1060px;margin:0 auto;padding:40px 22px 80px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px}
+h2{font-size:1.35rem;margin:56px 0 10px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem;margin:22px 0 6px}
+p{margin:8px 0}
+a{color:var(--accent)}
+.lede{font-size:1.1rem;color:var(--fg);max-width:820px}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+nav.links a{margin-right:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tile .n{font-size:1.7rem;font-weight:650;line-height:1.1}
+.tile .l{color:var(--muted);font-size:.88rem;margin-top:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h3{margin-top:0}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:2px}
+.neg{color:var(--warn)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:10px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+ul{padding-left:20px}
+li{margin:4px 0}
+.ladder{display:grid;grid-template-columns:70px 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:12px 0}
+.ladder div{padding:8px 12px;border-bottom:1px solid var(--line)}
+.ladder div:nth-last-child(-n+2){border-bottom:0}
+.ladder .t{font-weight:650;background:var(--card)}
+.ladder .bar{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+#fitmap{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.node rect{fill:var(--card);stroke:var(--line);stroke-width:1}
+.node .stripe{stroke:none}
+.node text{fill:var(--fg);font-size:13px}
+.node{cursor:pointer}
+.node:focus{outline:none}
+.node:focus rect.box,.node.hi rect.box{stroke:var(--edge-hi);stroke-width:2}
+.edge{stroke:var(--edge);stroke-width:2;fill:none}
+.edge.hi{stroke:var(--edge-hi);stroke-width:2.5}
+.lane{fill:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0;font-size:.9rem}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+#maptip{min-height:3.2em;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:.92rem}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--accent)}
+footer{margin-top:60px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}
 </style>
-<div class="topbar">
-  <div class="wrap">
-    <span class="brand">gavin&nbsp;branaa<span class="dim">&nbsp;/&nbsp;tritsystem</span></span>
-    <nav class="topnav">
-      <a href="#origins">Origins</a>
-      <a href="#lineage">Lineage</a>
-      <a href="#plants">Plants</a>
-      <a href="#neuro">Neuromorphic</a>
-      <a href="#ternary">Ternary</a>
-      <a href="#phononic">Phononic</a>
-      <a href="#games">Games</a>
-      <a href="#infra">Infrastructure</a>
-      <a href="#results">Results</a>
-    </nav>
-  </div>
-</div>
-
-<header class="hero">
-  <canvas id="raster" aria-hidden="true"></canvas>
-  <div class="wrap">
-    <div class="eyebrow">Independent research &nbsp;·&nbsp; unconventional computing</div>
-    <h1>When does <em>structure</em> actually help a thing compute?</h1>
-    <p class="lede">
-      Two threads &mdash; neuromorphic and phononic &mdash; that keep asking the same
-      question, tested in simulation, on real hardware, inside two games and a
-      from-scratch kernel. Every result measured. Negative results reported as
-      carefully as the positive ones.
-    </p>
-    <div class="statstrip">
-      <div><div class="n">27</div><div class="k">repositories</div></div>
-      <div><div class="n">~600</div><div class="k">commits</div></div>
-      <div><div class="n">Apr&ndash;Sep&nbsp;2026</div><div class="k">active span</div></div>
-      <div><div class="n">6&nbsp;+&nbsp;3</div><div class="k">upstream fixes merged / fixed by others</div></div>
-    </div>
-  </div>
-</header>
-
+</head>
+<body>
 <main>
 
-<section id="origins" class="narr">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">00 &mdash; Origins &amp; method</span>
-    </div>
-    <h2 class="sec-title">Where this started, and the discipline it runs on</h2>
-
-    <div class="prose">
-      <h3>The starting point</h3>
-      <p>
-        It began with a question about plants. How does a plant actually draw its
-        nutrients up out of the soil &mdash; and would a copper rod driven into the
-        ground change that? Would the <em>shape</em> of the rod matter? Chasing one
-        question &mdash; geometry acting on a physical transport process &mdash; led
-        into physics, and from physics into <strong>topology</strong>: the study of
-        what about a shape stays true when you bend and stretch it. Every thread below
-        is still that same question, wearing different clothes &mdash; the next section
-        is where it actually began.
-      </p>
-
-      <h3>How it compounded</h3>
-      <p>
-        Nothing here is a stack of unrelated side projects. Each piece feeds the next.
-        The spiking runtime built to feed plants became the game-AI engine, then the
-        control logic of a from-scratch operating-system kernel. The measurement discipline worked out in
-        the phononic-reservoir studies became a standalone reasoning harness. The
-        anomaly-detection pattern built by hand for a pond-monitoring tool was extracted
-        into a reusable library the third time it was needed. The same
-        <strong>.spk</strong> brain file runs on Python, C, Verilog and Godot backends
-        without change.
-      </p>
-
-      <div class="timeline">
-        <div class="row"><div class="when">prior</div><div class="what">A question about plants, copper rods, and whether <b>shape</b> matters &mdash; into physics, then topology.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;04</div><div class="what"><b>horde-defense-beta</b> &mdash; the first repo. A game, before any of the research.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>Spikeling</b> and <b>quasicrystal-mems-reservoir</b> created a day apart &mdash; the neuromorphic and phononic threads both open.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;06</div><div class="what"><b>012-trit-search / OBSERVE</b> &mdash; ternary-computing research turns into a working private code-search tool.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;07</div><div class="what"><b>tribe</b>, <b>methodlm</b>, <b>topological-phononics</b> &mdash; the engine drives a second game; the method becomes its own harness; the reservoir study gets pre-registered.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;08</div><div class="what"><b>observe-api</b>, <b>server-guard</b>, <b>mcp-gateway</b> &mdash; research tooling hardens into live, billed, monitored infrastructure.</div></div>
-        <div class="row"><div class="when">2026&nbsp;·&nbsp;09</div><div class="what"><b>spikeling-os</b> at milestone 121; the audit method points outward, then past ML entirely into general Python infrastructure &mdash; over 40 bugs filed across spikingjelly, snntorch, transformers, kornia, aiohttp, Pillow, SciPy and more, <b>six merged</b> (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210, #4299, #4303) and <b>three more fixed upstream</b> by the projects themselves. <a href="oss/">Full record &rarr;</a></div></div>
-      </div>
-
-      <h3>Teaching myself, in public</h3>
-      <p>
-        There is a repo called <strong>the-playbook</strong> whose entire job is to teach
-        this portfolio back to me from scratch &mdash; every claim tied to a real measured
-        number pulled from the repo it came from, written to <em>defend</em> the work under
-        questioning, not just to recognise it. The learning is structured the same way the
-        research is: a claim is not finished until it survives someone trying to break it.
-      </p>
-
-      <h3>As above, so below</h3>
-      <p>
-        The Hermetic line &mdash; <em>as above, so below</em> &mdash; is the working
-        heuristic, read as an engineering rule rather than a mystical one: if the same
-        structure repeats at every scale, the honest way to build a system is to spread
-        its work across that structure instead of routing everything through one place.
-        A different approach, and it means <strong>no bottleneck</strong>. That reading
-        is why the same move keeps recurring &mdash; a reservoir computes in the modes of
-        a physical medium instead of a processor; the kernel&rsquo;s scheduler <em>is</em>
-        a spiking network rather than a single loop; connectivity comes from a
-        topological rule instead of a stored table; the topology heals itself because
-        nothing sits at a single point of failure.
-      </p>
-
-      <h3>Reporting the losses, in a Stoic manner</h3>
-      <p>
-        The other half is Stoic. A measurement does not care what you hoped for, and the
-        discipline is to report the loss plainly &mdash; no spin, nothing buried, no
-        distress about it. The measured-results ledger below is that practice made
-        literal: every negative result is written in the same voice as every
-        confirmation. <strong>methodlm</strong> compiles the same posture into software
-        &mdash; it states the prediction first, then actively tries to refute what it is
-        about to accept.
-      </p>
-
-      <div class="epigraph">
-        <p>&ldquo;That which is below is like that which is above.&rdquo;</p>
-        <div class="attr">the Emerald Tablet &mdash; read here as an argument against bottleneck systems</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="lineage" class="narr">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">00b &mdash; Lineage</span>
-    </div>
-    <h2 class="sec-title">Every repo, traced back to the same starting point</h2>
-    <div class="prose">
-      <p>
-        One game, one gardening question, and one question about shape that turned into
-        topology. Everything else hangs off that &mdash; either as a <strong>tool the
-        research needed</strong>, a <strong>place the research had to survive</strong>
-        (two games, a kernel), or the <strong>discipline itself</strong> spun out into
-        software. Two concrete things are shared all the way down: a single
-        <code>.spk</code> brain file that runs on four backends unchanged, and one
-        measured-results ledger that every project reports into.
-      </p>
-    </div>
-
-    <div class="lineage-map">
-<pre><b class="root">&#9679;  horde-defense-beta</b>        a game. the first repo &mdash; no research attached.
-&#9474;
-&#9492;&#9472; <b class="hinge">a gardening question</b>      copper rods in soil: does the <b class="node">SHAPE</b> of the rod matter?
-   &#9474;
-   &#9492;&#9472; <b class="hinge">TOPOLOGY</b>               what stays true about a form when you bend it &mdash;
-      &#9474;                      the through-question under everything below
-      &#9474;
-      &#9500;&#9472; <b class="thread">PHONONIC</b> &middot; can a vibrating structure compute, and does its symmetry matter?
-      &#9474;     &#9500;&#9472; <b class="node">quasicrystal-mems-reservoir</b>
-      &#9474;     &#9500;&#9472; <b class="node">symmetry-selection-rule</b>
-      &#9474;     &#9492;&#9472; <b class="node">topological-phononics</b>     SSH-coupled reservoir; defect-tolerance
-      &#9474;                                  bounded to chiral symmetry
-      &#9474;
-      &#9500;&#9472; <b class="thread">NEUROMORPHIC</b> &middot; <b class="node">Spikeling</b> &mdash; built to run the plant feeder, before any game
-      &#9474;     &#9500;&#9472; <b class="node">tribe</b>                    every NPC runs a .spk brain, not a tree
-      &#9474;     &#9500;&#9472; <b class="node">horde-defense-beta</b>       the first game, now driven by the engine
-      &#9474;     &#9500;&#9472; <b class="node">spikeling-os</b>             kernel scheduler IS the SNN + SSH topology
-      &#9474;     &#9474;                           (coupling borrowed from topological-phononics)
-      &#9474;     &#9500;&#9472; <b class="node">pond-health</b>  -&gt;  <b class="node">sensor-duo</b>    pattern extracted the 2nd time it recurred
-      &#9474;     &#9474;             -&gt;  <b class="node">ternary-snn-monitor</b>   + OBSERVE ternary compression
-      &#9474;     &#9500;&#9472; <b class="node">silicon-mega-accelerator</b> accel techniques, tested against the runtime
-      &#9474;     &#9500;&#9472; <b class="node">heterogeneous-neuron-ontology</b>
-      &#9474;     &#9492;&#9472; <b class="node">doorcam</b>                  via Spikeling's hardware sensor-adapter layer
-      &#9474;
-      &#9492;&#9472; <b class="thread">THE METHOD</b> &middot; pre-register -&gt; measure -&gt; report the negative, same voice
-            &#9500;&#9472; <b class="node">methodlm</b>  -&gt;  <b class="node">llama-demo</b>     the discipline compiled into software
-            &#9500;&#9472; <b class="node">the-playbook</b>                 teaches the portfolio back, to defend it
-            &#9492;&#9472; <b class="node">audit method</b>  -&gt;  upstream &mdash; spikingjelly #743/#744/#750 (merged),
-                                     snntorch #441, transformers #48509, kornia #4210, +7 more
-
-
-<b class="root">&#9679;  012-trit-search / OBSERVE</b>    a parallel root: three-state-logic research -&gt; a tool
-      &#9500;&#9472; <b class="node">observe-api</b>            hosted, pay-per-query, live billing
-      &#9492;&#9472; <b class="node">mcp-gateway</b>  -&gt;  <b class="node">server-guard</b>   audit log + rate limits for the surfaces above</pre>
-      <div class="map-foot">20 of 27 repositories shown &mdash; the rest are small single-purpose tools branching off the same nodes.</div>
-    </div>
-  </div>
-</section>
-
-<section id="plants" class="narr">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">01 &mdash; Electroculture &amp; the plant machine</span>
-    </div>
-    <h2 class="sec-title">The project was a plant feeder before it was anything else</h2>
-
-    <div class="prose">
-      <h3>It started as a game</h3>
-      <p>
-        The first thing being built here was just a game &mdash;
-        <strong>horde-defense-beta</strong>, waves of enemies, a deck-building creep
-        system, no research attached. The research arrived sideways, out of a gardening
-        question that had nothing to do with games.
-      </p>
-
-      <h3>Copper rods in the soil</h3>
-      <p>
-        The question was how a plant actually moves nutrients up out of the ground, and
-        whether a copper rod driven in beside it changes anything &mdash; the
-        electroculture idea, that a piece of metal and the ambient electric field can
-        shift how a plant grows. The experiments mattered less for a yes-or-no on
-        electroculture than for the thing that kept nagging: the <em>shape</em> of the
-        rod seemed to change the behaviour. Straight rod, coil, bent geometry &mdash;
-        not the same. A question about geometry acting on a physical transport process
-        is a topology question, and that is the door the rest of this walked through.
-      </p>
-
-      <h3>The spiking network was built to feed plants</h3>
-      <p>
-        The SNN did not start as game AI. It was meant to run the garden: watch a plant
-        through sensors, dose the exact right amount of water and nutrient, and &mdash;
-        the part that mattered &mdash; <em>learn</em> each plant&rsquo;s preferences over
-        time, what it responded to and what it didn&rsquo;t, with nobody hand-coding a
-        rule per species. A closed loop that adapts to the thing it is keeping alive.
-      </p>
-
-      <h3>Same controller, different system</h3>
-      <p>
-        That plant feeder became <strong>Spikeling</strong>. The same loop that was
-        supposed to learn a tomato&rsquo;s preferences is the shape you want for an NPC
-        learning a player, and then for a kernel learning its own task queue.
-        <strong>pond-health</strong> is the closest living relative of the original idea
-        &mdash; an SNN watching an environment and flagging trouble before it is visible
-        &mdash; and it is measured honestly against a plain trend model rather than
-        assumed to beat it.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section id="neuro">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">02 &mdash; Neuromorphic core</span>
-      <span class="sec-count">5 repositories</span>
-    </div>
-    <h2 class="sec-title">A spiking-neural-network runtime, and everything built on it</h2>
-    <p class="sec-intro">
-      One engine: write a <code>.spk</code> brain, run it unchanged on four backends.
-      From that engine, a kernel scheduler, a hardware-accelerator study, and a
-      ternary telemetry monitor.
-    </p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/Spikeling">
-        <div class="name">Spikeling</div>
-        <div class="meta"><span class="lang">C · Python · GDScript</span><span>83 commits</span><span>public</span></div>
-        <div class="desc">A DSL + runtime for spiking neural networks. The same <code>.spk</code> file runs on Python, C, Verilog and Godot backends. Ships a Godot game-AI plugin, an MCP server, and a hardware sensor-adapter layer confirmed against real acoustic, telemetry and video devices.</div>
-        <div class="lineage"><span class="from">from</span> the plant-feeder controller <span class="to">tribe, horde AI, spikeling-os, pond-health, ternary-snn-monitor</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/spikeling-os">
-        <div class="name">spikeling-os</div>
-        <div class="meta"><span class="lang">Rust</span><span>121 milestones</span><span>public</span></div>
-        <div class="desc">A from-scratch x86_64 kernel whose task scheduler <em>is</em> the Spikeling runtime &mdash; an SNN with topological SSH-coupled connectivity as real kernel control logic. Includes an evidence-gated self-healing topology and a growing subset-C compiler with its own on-target test suite.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling + topological-phononics <span class="to">borrows the SSH coupling as scheduler logic</span></div>
-        <div class="foot"><span>active 2026 · 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/silicon-mega-accelerator">
-        <div class="name">silicon-mega-accelerator</div>
-        <div class="meta"><span class="lang">Python</span><span>5 commits</span><span>public</span></div>
-        <div class="desc">Hardware-accelerator techniques from the neural-network-on-silicon literature, applied to the Spikeling runtime and tested for correctness and accuracy rather than asserted to help.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">accelerator literature, tested against the runtime</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/ternary-snn-monitor">
-        <div class="name">ternary-snn-monitor</div>
-        <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
-        <div class="desc">Heterogeneous spiking-neuron anomaly detection plus multi-trit ternary compression, run against live telemetry, CSV replay, a desktop widget and real audio.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling + OBSERVE <span class="to">its SNN detector, its ternary compression</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/heterogeneous-neuron-ontology">
-        <div class="name">heterogeneous-neuron-ontology</div>
-        <div class="meta"><span class="lang">Python</span><span>public</span></div>
-        <div class="desc">Testing an external &ldquo;heterogeneous compute&rdquo; ontology principle against how a spiking neuron population is actually composed.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">an outside claim, checked against the real population</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="ternary">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">03 &mdash; Ternary &amp; verifiable reasoning</span>
-      <span class="sec-count">3 repositories</span>
-    </div>
-    <h2 class="sec-title">Three-state logic, and a harness that makes claims prove themselves</h2>
-    <p class="sec-intro">
-      Ternary-computing research that shipped a real tool, and a sibling project that
-      holds any reasoning &mdash; human or model &mdash; to a pre-registered, refutation-tested standard.
-    </p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/012-trit-search">
-        <div class="name">012-trit-search / OBSERVE</div>
-        <div class="meta"><span class="lang">Python</span><span>105 commits</span><span>public</span></div>
-        <div class="desc">Ternary-computing research and its shipping product: local, private semantic code search (desktop GUI, CLI, MCP server), one-line install, nothing leaves the machine. Chunk-provenance lineage across commits, hybrid lexical + semantic search, incremental re-indexing.</div>
-        <div class="lineage"><span class="from">from</span> three-state-logic research <span class="to">observe-api, mcp-gateway, ternary-snn-monitor</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/methodlm">
-        <div class="name">methodlm</div>
-        <div class="meta"><span class="lang">Python</span><span>14 commits</span><span>public</span></div>
-        <div class="desc">A verifiable causal-reasoning harness. Pre-registers every test, runs real backdoor adjustment with a robustness value, and runs DoWhy-backed refutation &mdash; placebo treatment, random common cause, subset validation &mdash; against each accepted claim. Benchmarked on ten cited public datasets plus this portfolio&rsquo;s own live telemetry.</div>
-        <div class="lineage"><span class="from">from</span> the phononic-reservoir measurement discipline <span class="to">llama-demo, the results ledger</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/llama-demo">
-        <div class="name">llama-demo</div>
-        <div class="meta"><span class="lang">Python</span><span>~7 commits</span><span>public</span></div>
-        <div class="desc">Zero-cost local-model experiments (Ollama) applying the methodlm discipline to LLM tooling &mdash; a coding-agent dispatcher, model vet/quantize/finetune scripts, and honest negatives: a local 7B failed to fix a real bug even when handed the exact correct lesson.</div>
-        <div class="lineage"><span class="from">from</span> methodlm <span class="to">the discipline as training signal, not just a prompt</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="phononic">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">04 &mdash; Phononic / reservoir computing</span>
-      <span class="sec-count">3 repositories</span>
-    </div>
-    <h2 class="sec-title">Can a vibrating structure compute &mdash; and does its symmetry matter?</h2>
-    <p class="sec-intro">
-      Finite-element studies of micro-mechanical resonators as physical reservoirs.
-      Each one pre-registered; each boundary condition and null result written up as
-      carefully as the wins.
-    </p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/quasicrystal-mems-reservoir">
-        <div class="name">quasicrystal-mems-reservoir</div>
-        <div class="meta"><span class="lang">Python</span><span>3 commits</span><span>public</span></div>
-        <div class="desc">Finite-element study of quasicrystal-perforated MEMS resonators and what their mode structure can &mdash; and cannot &mdash; compute as a physical reservoir. Includes the write-up.</div>
-        <div class="lineage"><span class="from">from</span> the copper-rod &ldquo;does shape matter&rdquo; question <span class="to">symmetry-selection-rule</span></div>
-        <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/symmetry-selection-rule">
-        <div class="name">symmetry-selection-rule</div>
-        <div class="meta"><span class="lang">report</span><span>2 commits</span><span>public</span></div>
-        <div class="desc">A lab report deriving a symmetry selection rule for computation in phononic and quasicrystal MEMS reservoirs &mdash; which modes are available to the readout, and why.</div>
-        <div class="lineage"><span class="from">from</span> quasicrystal-mems-reservoir <span class="to">the rule it implied, derived and stress-tested</span></div>
-        <div class="foot"><span>active 2026 · 07</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/topological-phononics">
-        <div class="name">topological-phononics</div>
-        <div class="meta"><span class="lang">Python</span><span>12 commits</span><span>public</span></div>
-        <div class="desc">Does topological structure make an analog SSH reservoir tolerate a dead element? A pre-registered study with a sharp answer and a sharp boundary: the protection holds only while chiral symmetry does, and reverses sign in a physical Duffing model. Includes a Fibonacci-connectivity cost study, scale-characterised N = 50&ndash;10,000.</div>
-        <div class="lineage"><span class="from">from</span> the phononic thread <span class="to">spikeling-os borrows its SSH coupling for the scheduler</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="games">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">05 &mdash; Games on the spiking engine</span>
-      <span class="sec-count">2 repositories</span>
-    </div>
-    <h2 class="sec-title">Where the research has to survive contact with a player</h2>
-    <p class="sec-intro">
-      The same spiking brain that runs in the kernel drives every agent in these
-      games &mdash; a stress test the benchmark scripts can&rsquo;t provide.
-    </p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/tribe">
-        <div class="name">tribe</div>
-        <div class="meta"><span class="lang">GDScript</span><span>74 commits</span><span>public · 3&#9733;</span></div>
-        <div class="desc">A survival / RTS sim where every NPC &mdash; tribe members, animals, rival AI &mdash; runs a small spiking neural network instead of a behaviour tree. Persistence with offline catch-up, proximity trade and diplomacy, and emergent phase-locking between independent NPC brains driven only by shared drum audio.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling <span class="to">the plant-feeder loop, now learning a player</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/horde-defense-beta">
-        <div class="name">horde-defense-beta</div>
-        <div class="meta"><span class="lang">GDScript</span><span>~12 commits</span><span>public · 1&#9733;</span></div>
-        <div class="desc">The repo that started everything. A 3D horde-defense game with a deck-building creep system &mdash; and the source of the questions the rest of the portfolio went on to chase.</div>
-        <div class="lineage"><span class="from">the root</span> <span class="to">now runs on Spikeling, like everything downstream of it</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="infra">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">06 &mdash; Production infrastructure</span>
-      <span class="sec-count">3 repositories</span>
-    </div>
-    <h2 class="sec-title">Research tooling, hardened into things people can depend on</h2>
-    <p class="sec-intro">Live, billed, monitored &mdash; not demos.</p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/observe-api">
-        <div class="name">observe-api</div>
-        <div class="meta"><span class="lang">Python</span><span>102 commits</span><span>public</span></div>
-        <div class="desc">A hosted, pay-per-query semantic code-search API for AI agents, plus an ACP- and Google-UCP-compatible agent-commerce discovery and reputation layer &mdash; the cross-merchant discovery gap neither spec actually defines. Real Stripe billing, live deployment behind Caddy + TLS, two-sided reputation from earned agreement between disconnected keys.</div>
-        <div class="lineage"><span class="from">from</span> OBSERVE <span class="to">the local tool, hosted and billed</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/mcp-gateway">
-        <div class="name">mcp-gateway</div>
-        <div class="meta"><span class="lang">Python</span><span class="lock">private</span></div>
-        <div class="desc">A self-contained, tamper-evident audit log &mdash; hash-chained JSONL &mdash; plus rate limiting for local MCP tool servers. Wired into both OBSERVE&rsquo;s and Spikeling&rsquo;s tool surfaces so every call is logged and bounded. Single-operator scope, no cloud dependency.</div>
-        <div class="lineage"><span class="from">from</span> OBSERVE + Spikeling <span class="to">their MCP surfaces needed an audit trail; feeds server-guard</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/server-guard">
-        <div class="name">server-guard</div>
-        <div class="meta"><span class="lang">Python</span><span>42 commits</span><span>public</span></div>
-        <div class="desc">Real-time server monitoring and alerting, benchmarked head-to-head against Datadog, Wazuh, PagerDuty and Netdata on sourced, cited pricing rather than marketing claims.</div>
-        <div class="lineage"><span class="from">from</span> mcp-gateway <span class="to">watching the same surfaces, at host scale</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="applied">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">07 &mdash; Applied hardware builds</span>
-      <span class="sec-count">3 repositories</span>
-    </div>
-    <h2 class="sec-title">Prototypes for real devices, held to the research standard</h2>
-    <p class="sec-intro">Verify it actually works on the hardware before calling it done.</p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/tritsystem/doorcam">
-        <div class="name">doorcam</div>
-        <div class="meta"><span class="lang">Python</span><span>8 commits</span><span>public</span></div>
-        <div class="desc">A regular USB webcam becomes a driveway monitor: YOLOv8 person / vehicle detection restricted to a hand-drawn boundary, Discord webhook alerts with snapshots, and a live MJPEG feed built for screen-sharing.</div>
-        <div class="lineage"><span class="from">from</span> Spikeling&rsquo;s hardware sensor-adapter layer <span class="to">the video-device path, as a standalone build</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/pond-health">
-        <div class="name">pond-health</div>
-        <div class="meta"><span class="lang">Python</span><span>7 commits</span><span>public</span></div>
-        <div class="desc">Predicts pond oxygen crashes and algae blooms before they&rsquo;re visible. A transparent trend model &mdash; no black box, because there&rsquo;s no honest training data yet &mdash; with a Spikeling SNN as a second detector, measured against the trend model rather than assumed better. It never false-alarms but gives no early warning; the trend model does the opposite.</div>
-        <div class="lineage"><span class="from">from</span> the original plant-feeder idea <span class="to">an SNN watching an environment; feeds sensor-duo, ternary-snn-monitor</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/tritsystem/sensor-duo">
-        <div class="name">sensor-duo</div>
-        <div class="meta"><span class="lang">Python</span><span>6 commits</span><span>public</span></div>
-        <div class="desc">The trend + spiking + SQLite + Grafana anomaly-detection pattern from pond-health, extracted into a reusable toolkit after building it by hand twice. Generic over any named numeric channel, with a normalised schema so a new channel never needs a migration.</div>
-        <div class="lineage"><span class="from">from</span> pond-health <span class="to">the pattern, extracted the 2nd time it was needed</span></div>
-        <div class="foot"><span>active 2026 · 08</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="upstream">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">08 &mdash; Upstream OSS audits</span>
-      <span class="sec-count">6 merged &middot; 3 fixed upstream</span>
-    </div>
-    <h2 class="sec-title">The same audit method, pointed at other people&rsquo;s libraries</h2>
-    <p class="sec-intro">
-      The audit method sharpened on Spikeling&rsquo;s own reset / dtype / per-neuron bugs,
-      then pointed outward &mdash; first at neuromorphic libraries and PyTorch-ecosystem
-      repos, then at general-purpose Python infrastructure (aiohttp, Pillow, SciPy,
-      botocore, Celery and more). Each is a real bug found by reading the code, reproduced
-      against a clean install, and sent upstream with a root cause, a fix, and a
-      failing-then-passing test. Six PRs of mine have landed; three more bugs I reported were
-      independently fixed upstream by the projects themselves; the rest are filed and open.
-      <b>&ldquo;Merged&rdquo; means a merged pull request I authored &mdash; that is exactly
-      six.</b> <a href="oss/">The full audited record, with method and per-finding
-      write-ups &rarr;</a>
-    </p>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/743">
-        <div class="name">spikingjelly #743</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc">A neuron&rsquo;s registered reset values are plain attributes, not buffers, so <code>.to()</code> / <code>.half()</code> never moves them. After <code>net.half()</code>, <code>reset()</code> writes a float32 value back into a float16 state. Fix threads the transform through the reset-value store.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/744">
-        <div class="name">spikingjelly #744</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc"><code>MSTDPLearner</code> allocated its eligibility trace with no explicit dtype, defaulting to float32 regardless of the synapse&rsquo;s own precision &mdash; a float16 synapse under mSTDP raised a grad-dtype mismatch on write. Fix threads the synapse&rsquo;s device and dtype through both the eligibility buffer and the reward tensor.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/fangwei123456/spikingjelly/pull/750">
-        <div class="name">spikingjelly #750</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc">New resonate-and-fire neuron (Izhikevich 2001) for the neuron zoo &mdash; proposed as an issue first, implemented to the maintainer&rsquo;s design spec after sign-off: fixed oscillator parameters, two real-valued states, fires on the voltage component, single documented reset rule.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/huggingface/transformers/pull/48509">
-        <div class="name">transformers #48509</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc"><code>DynamicCache.reset()</code> zeros the K/V in place &mdash; correct for the fixed-buffer <code>StaticLayer</code>, wrong for <code>DynamicLayer</code>, which grows by <code>cat</code>. Post-reset the cache is corrupt, not empty. Fix gives <code>DynamicLayer</code> a real reset.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/kornia/kornia/pull/4210">
-        <div class="name">kornia #4210</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc">Every auto-augment policy gates through one float32 mask, upcasting a float16 / bfloat16 batch to float32. Fix threads the input dtype into the mask; also clears 19 of the repo&rsquo;s tracked half-precision xfails.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/kornia/kornia/pull/4299">
-        <div class="name">kornia #4299</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc"><code>solve_cubic</code>&rsquo;s three-real-roots branch differentiates <code>acos</code> at its own domain boundary &mdash; the value is fine but the derivative diverges, giving NaN gradients for any repeated or near-repeated root. A plain clamp doesn&rsquo;t help: it guards the value, not the diverging derivative. Fix routes the boundary through a detached value and a substituted safe gradient.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/kornia/kornia/pull/4303">
-        <div class="name">kornia #4303</div>
-        <div class="meta"><span class="lang">PyTorch</span><span style="color:var(--gold)">merged</span></div>
-        <div class="desc"><code>bbox_to_mask3d</code> unioned three axis slabs and tried to recover the intersection with a three-way reduction &mdash; which breaks the moment any one slab covers a whole axis, filling the entire volume instead of the true intersection. Fix computes the intersection directly, matching what <code>Boxes3D.to_mask</code> already did correctly.</div>
-        <div class="foot"><span>merged 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/lucidrains/rotary-embedding-torch/pull/50">
-        <div class="name">rotary-embedding-torch #50</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc">The token-position index is built in the query dtype. float16 can&rsquo;t hold integers past 2048 &mdash; so past that, consecutive positions collapse onto the same rotary frequency and the position signal flattens. Fix widens the position math to float32.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/jeshraghian/snntorch/pull/441">
-        <div class="name">snntorch #441</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc"><code>LeakyParallel</code> silently ignores a per-neuron <code>beta</code> &mdash; an <code>if/elif</code> branch shadowed by one that always matches first. Fix restores the per-neuron decay and rejects a wrong-length <code>beta</code>. (snntorch&nbsp;#443: <code>zeros()</code> no-op.)</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/lucidrains/vit-pytorch/pull/373">
-        <div class="name">vit-pytorch #373</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc"><code>RvT</code> doesn&rsquo;t run in half precision at all: its axial rotary embedding unpacks the input dtype and never uses it, so <code>sin</code>/<code>cos</code> stay float32 and the attention matmul raises. Fix is the one line that uses the dtype it already read.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/kornia/kornia/pull/4319">
-        <div class="name">kornia #4319</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc"><code>RenderingDeFMO.times</code> is a plain attribute, not a registered buffer, so <code>.to()</code>/<code>.half()</code> never move it; <code>forward</code> re-derives only its device from the input, never its dtype, so a half-precision forward pass crashes on the stale float32 buffer. Fix registers it as a non-persistent buffer, same convention as the sibling #4079 fix.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/kornia/kornia/pull/4336">
-        <div class="name">kornia #4336</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc"><code>bbox_to_mask</code>&rsquo;s pixel-index grid is built at the caller&rsquo;s own dtype. float16 can&rsquo;t hold consecutive integers past 2048, so a float16 <code>boxes</code> on an image taller or wider than that silently mismasks rows or columns near the collapse. Fix builds the grid at a fixed float32 regardless of caller dtype; promotion handles the rest.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/ultralytics/ultralytics/pull/26075">
-        <div class="name">ultralytics #26075</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc">SAM3&rsquo;s relative-position-bias coordinate cache keys on <code>(H, W)</code> alone. A same-size call in a different dtype &mdash; a float32 warm-up forward, then a half-precision inference forward &mdash; silently reuses stale-dtype coordinates and crashes the (correctly half-precision) embedding layer that consumes them. Fix extends the cache key to include device and dtype.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="https://github.com/lucidrains/denoising-diffusion-pytorch/pull/370">
-        <div class="name">lucidrains &times;3 &mdash; SinusoidalPosEmb</div>
-        <div class="meta"><span class="lang">PyTorch</span><span>filed</span></div>
-        <div class="desc">The timestep embedding shared across several lucidrains diffusion repos has no parameters, so <code>.half()</code> never touches it &mdash; it keeps emitting float32 regardless of the standard <code>long</code> timestep input, and crashes the next half-precision layer. Found duplicated verbatim in three repos, same fix in each: denoising-diffusion-pytorch&nbsp;#370, video-diffusion-pytorch&nbsp;#40, imagen-pytorch&nbsp;#392.</div>
-        <div class="foot"><span>filed 2026 &middot; 09</span><span class="arw">&rarr;</span></div>
-      </a>
-
-      <a class="card" href="oss/">
-        <div class="name">&hellip; and 8 more</div>
-        <div class="meta"><span class="lang">record</span><span>filed</span></div>
-        <div class="desc">kornia&nbsp;#4337, perceiver-pytorch&nbsp;#70, torchaudio&nbsp;#4228, reservoirpy&nbsp;#245, pytorch-esn&nbsp;#27, tenns-core&nbsp;#1, sinabs&nbsp;#336, librosa&nbsp;#2099 &mdash; each with a root cause, a reproduction, a fix, and a regression test. Method overview and honest-negatives list included.</div>
-        <div class="foot"><span>the full record</span><span class="arw">&rarr;</span></div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="results">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-tag">09 &mdash; Measured results</span>
-      <span class="sec-count">the honest ledger</span>
-    </div>
-    <h2 class="sec-title">What the measurements actually showed</h2>
-    <p class="sec-intro">
-      The point of the whole portfolio. A result is logged here whether it went the way
-      it was hoped to or not &mdash; a reported negative is the method working, not the
-      method failing.
-    </p>
-
-    <div class="ledger-scroll">
-      <table class="ledger">
-        <thead>
-          <tr><th>Finding</th><th>Domain</th><th>Verdict</th><th>What was measured</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="finding">Homeostatic threshold adaptation beats a blind &ldquo;breathing&rdquo; rhythm</td>
-            <td class="domain">Spikeling</td>
-            <td><span class="pill confirmed">Confirmed</span></td>
-            <td class="measure">A periodic threshold rhythm was falsified against noise; a closed-loop homeostatic controller then decisively beat both &mdash; deterministic recovery, tighter worst-case latency.</td>
-          </tr>
-          <tr>
-            <td class="finding">SSH reservoir tolerates a dead element &mdash; only while chiral symmetry holds</td>
-            <td class="domain">topological-phononics</td>
-            <td><span class="pill boundary">Boundary</span></td>
-            <td class="measure">Defect-tolerance is real in the idealised SSH model, vanishes when chiral symmetry is broken, and reverses sign in a physical Duffing model. The boundary is the result.</td>
-          </tr>
-          <tr>
-            <td class="finding">Structured noise cancels exactly at the reservoir readout</td>
-            <td class="domain">reservoir / real mics</td>
-            <td><span class="pill confirmed">Confirmed</span></td>
-            <td class="measure">A simulation prediction, then reproduced twice on a real two-microphone rig &mdash; after catching a verdict-printer bug and a spectral-overlap confound. Holds when target and interferer are spectrally separated.</td>
-          </tr>
-          <tr>
-            <td class="finding">Independent NPC brains phase-lock from shared audio alone</td>
-            <td class="domain">tribe / sync-mesh</td>
-            <td><span class="pill confirmed">Confirmed</span></td>
-            <td class="measure">Kuramoto order parameter r rose 0.48 &rarr; 0.94 with no direct communication. Strong on one device; about 10&times; weaker across two separate microphones &mdash; visible only over six trials with lag correction.</td>
-          </tr>
-          <tr>
-            <td class="finding">Fibonacci connectivity as a cheap substitute for stored random wiring</td>
-            <td class="domain">topological-phononics</td>
-            <td><span class="pill negative">Negative</span></td>
-            <td class="measure">A 3-parameter recursive rule vs O(N&sup2;)-stored random connectivity: honest cost of ~1.4&ndash;2&times; on linear recall, ~1&ndash;17% on NARMA10. Smoothly scale-characterised, N = 50&ndash;10,000. Reported, not buried.</td>
-          </tr>
-          <tr>
-            <td class="finding">Ternary-quantising a vision model for edge speedup</td>
-            <td class="domain">ternary vision</td>
-            <td><span class="pill negative">Negative</span></td>
-            <td class="measure">MobileNetV3-Small went 78.8% &rarr; 4.9% accuracy across two independent attempts. A real 13.8&times; disk saving, but zero inference speedup. Ruled out cleanly.</td>
-          </tr>
-          <tr>
-            <td class="finding">One symmetry law unifying the phononic, ternary and acoustic substrates</td>
-            <td class="domain">cross-substrate</td>
-            <td><span class="pill negative">Negative</span></td>
-            <td class="measure">The grand-unification attempt lost when each substrate&rsquo;s real code was measured. Only a narrow winding-invariant rhyme between the phononic and ternary cases survived; acoustic is a separate mechanism.</td>
-          </tr>
-          <tr>
-            <td class="finding">Two-microphone TDOA source localisation on the sync-mesh rig</td>
-            <td class="domain">acoustic localisation</td>
-            <td><span class="pill open">Open</span></td>
-            <td class="measure">Coin-flip accuracy (2 of 4) after fixing three real bugs. Room acoustics vs positioning-consistency vs a remaining bug not yet distinguished. Left open, not spun.</td>
-          </tr>
-          <tr>
-            <td class="finding">SNN-driven SSH-topological task scheduler as real kernel logic</td>
-            <td class="domain">spikeling-os</td>
-            <td><span class="pill confirmed">Confirmed</span></td>
-            <td class="measure">Boots and schedules under an SNN with dimerised coupling; evidence-gated self-healing topology live; 121 milestones, each with an on-target test and a fresh + reused boot check.</td>
-          </tr>
-          <tr>
-            <td class="finding">Baking the reasoning method into small-model weights</td>
-            <td class="domain">llama-demo / method</td>
-            <td><span class="pill confirmed">Confirmed</span></td>
-            <td class="measure">Fine-tuning the method into a 0.5B model&rsquo;s weights beat prompting the same model &mdash; on that small model, the discipline transfers better as training signal than as instructions.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="legend">
-      <span><i style="background:var(--gold);color:var(--gold)"></i>Confirmed &mdash; prediction held under test</span>
-      <span><i style="background:var(--amber);color:var(--amber)"></i>Negative &mdash; it didn&rsquo;t work, and that&rsquo;s written down</span>
-      <span><i style="background:var(--ember-bright);color:var(--ember-bright)"></i>Boundary &mdash; true only inside a stated condition</span>
-      <span><i style="background:var(--faint);color:var(--faint)"></i>Open &mdash; not yet resolved, not overclaimed</span>
-    </div>
-  </div>
-</section>
-
-</main>
+<header>
+<h1>Gavin Branaa <span class="muted" style="font-weight:400">· tritsystem</span></h1>
+<p class="lede">I research <strong>ML security and low-level systems security</strong>: I find memory-safety, correctness and isolation bugs in machine-learning libraries and in the native code underneath them, reproduce each one through the real target, fix it upstream, and build the tools and study material that make the next one faster to find and easier to check.</p>
+<p class="muted">Every number on this page is measured and dated, and every result links to its source. Negative results are reported with the same care as positives, and only merged pull requests are counted as contributions.</p>
+<nav class="links small"><a href="https://github.com/tritsystem">GitHub</a><a href="https://tritsystem.github.io/sec-portfolio/">Security track record</a><a href="https://tritsystem.github.io/sec-portfolio/deep-dive.html">Fix-by-fix deep dive</a><a href="https://github.com/tritsystem/research-portfolio/blob/main/METHOD.md">The Method</a><a href="https://www.linkedin.com/in/gavin-branaa-a23448170/">LinkedIn</a></nav>
+</header>
+
+<h2 id="record">The record at a glance</h2>
+<p class="small muted">From a full GitHub snapshot of every pull request I've authored, taken 2026-11-04, counting only other people's repositories (98 PRs across 54 repositories).</p>
+<div class="tiles">
+<div class="tile"><div class="n">35</div><div class="l">merged fixes and features, across 16 projects</div></div>
+<div class="tile"><div class="n">71%</div><div class="l">of decided PRs merged (35 of 49; 95% interval 58–82%)</div></div>
+<div class="tile"><div class="n">3.4 days</div><div class="l">median from opening to merge (quartiles 1.0 and 8.7)</div></div>
+<div class="tile"><div class="n">1</div><div class="l">published security advisory (PyJWT, CVE-2026-103001)</div></div>
+<div class="tile"><div class="n">7</div><div class="l">bugs I reported that maintainers then fixed</div></div>
+</div>
+<p class="small">Read the denominator: 49 of the 98 are still open, and I count them as undecided, not as failures. Sixteen maintainers did all 35 merges, and four of them did 21, so this record says as much about those projects' responsiveness as about my patches. Of the 14 closed without merging, 8 were superseded by another fix for the same bug, 3 closed for policy or process reasons (one was my own sign-off mistake), 2 weren't wanted in that form, and none was rejected because the fix was wrong. One closed PR's commits were still merged, cherry-picked under my name into the maintainer's own PR (open_clip #1231); I don't count it.</p>
+
+<h2 id="security">Security and correctness work</h2>
+<p>The work splits into the native and systems layer, where bugs are memory-safety and isolation problems, and the ML layer, where they are silent numerical errors that change a model's output without crashing anything.</p>
+
+<h3>Published advisory</h3>
+<table>
+<tr><th>Advisory</th><th>Package</th><th>What</th></tr>
+<tr><td><a href="https://github.com/advisories/GHSA-gvp8-978c-rx2q">GHSA-gvp8-978c-rx2q</a><br><span class="small muted">CVE-2026-103001</span></td><td>PyJWT 2.11.0–2.13.0</td><td><code>PyJWT.decode()</code> mutated the caller's <code>options</code> dict, so a reused dict could silently switch off claim verification. Medium severity, CVSS 6.5, CWE-471. Published 2026-09-30, credited to me as reporter.</td></tr>
+</table>
+
+<h3>Merged fixes, by bug class</h3>
+<table>
+<tr><th>Class</th><th class="num">Merged</th><th>Examples</th></tr>
+<tr><td>Memory safety in C/C++</td><td class="num">4</td><td>use-after-free and double free in <a href="https://github.com/cfengine/core/pull/6358">cfengine #6358</a>; leak and NULL dereference in DeepSpeed's native shared-memory init (<a href="https://github.com/deepspeedai/DeepSpeed/pull/8565">#8565</a>); unchecked allocations in miniupnp's firewall rule builders and HTTP path (<a href="https://github.com/miniupnp/miniupnp/pull/922">#922</a>, <a href="https://github.com/miniupnp/miniupnp/pull/942">#942</a>), which I classify as robustness rather than exploitable bugs</td></tr>
+<tr><td>Network-daemon and firewall correctness (C)</td><td class="num">3</td><td>miniupnp: IPv4 port mappings that dropped their remote-host restriction under nftables (<a href="https://github.com/miniupnp/miniupnp/pull/925">#925</a>), a netlink socket left out of sync on an error path (<a href="https://github.com/miniupnp/miniupnp/pull/941">#941</a>), DNAT rules created at the kernel's highest revision (<a href="https://github.com/miniupnp/miniupnp/pull/923">#923</a>)</td></tr>
+<tr><td>Authorization boundary</td><td class="num">1</td><td>Woodpecker CI's org-level secret queries didn't exclude repo-scoped secrets (<a href="https://github.com/woodpecker-ci/woodpecker/pull/7365">#7365</a>); a defensive fix, not exploitable on a normally run instance</td></tr>
+<tr><td>Shared mutable state (aliasing)</td><td class="num">2</td><td>Ansible hosts seeing another host's facts under <code>run_once</code> (<a href="https://github.com/ansible/ansible/pull/87503">#87503</a>); Celery <code>Signature.clone()</code> sharing kwargs (<a href="https://github.com/celery/celery/pull/10571">#10571</a>)</td></tr>
+<tr><td>Cross-sample and cross-call leakage in ML</td><td class="num">2</td><td>GCViT mixing features between images in one batch (<a href="https://github.com/huggingface/pytorch-image-models/pull/2848">timm #2848</a>); stale coordinate caches in the SAM3 decoder (<a href="https://github.com/ultralytics/ultralytics/pull/26075">ultralytics #26075</a>)</td></tr>
+<tr><td>Precision and dtype drift</td><td class="num">9</td><td>float16/bfloat16 input silently upcast or exported at the wrong dtype: MONAI (<a href="https://github.com/Project-MONAI/MONAI/pull/9103">#9103</a>, <a href="https://github.com/Project-MONAI/MONAI/pull/9104">#9104</a>), NVIDIA Model-Optimizer (<a href="https://github.com/NVIDIA/Model-Optimizer/pull/2651">#2651</a>), librosa (<a href="https://github.com/librosa/librosa/pull/2106">#2106</a>), kornia (4), SpikingJelly (1)</td></tr>
+<tr><td>Broken gradients</td><td class="num">2</td><td>non-finite gradients at a boundary (<a href="https://github.com/kornia/kornia/pull/4299">kornia #4299</a>); backward broken by checkpointing plus an in-place activation (<a href="https://github.com/huggingface/pytorch-image-models/pull/2849">timm #2849</a>)</td></tr>
+<tr><td>Module state that didn't follow <code>.to()</code></td><td class="num">3</td><td>kornia (2), SpikingJelly (1)</td></tr>
+<tr><td>Logic, geometry and validation</td><td class="num">5</td><td>a group-size check that skipped narrow layers (<a href="https://github.com/vllm-project/llm-compressor/pull/3252">llm-compressor #3252</a>), image-processor handling in transformers (<a href="https://github.com/huggingface/transformers/pull/49767">#49767</a>), kornia (2), snntorch (1)</td></tr>
+<tr><td>Features (not bug fixes)</td><td class="num">4</td><td>snntorch synaptic delay, homeostasis and an equation-to-neuron generator; a resonate-and-fire neuron for SpikingJelly</td></tr>
+</table>
+<p class="small muted">The class labels are my own (from the <a href="https://tritsystem.github.io/sec-portfolio/">track-record site's</a> classifier). Apart from PyJWT, no maintainer or CVE has given any of these a security designation.</p>
+
+<h3>In review (open, not counted)</h3>
+<ul class="small">
+<li><strong>GPU memory safety in bitsandbytes' 4-bit path.</strong> An out-of-bounds GPU write in <code>quantize_4bit</code> and an out-of-bounds read from a crafted checkpoint in <code>dequantize_4bit</code>, both shown with compute-sanitizer. Filed publicly because the project's own security guide classes GPU out-of-bounds bugs as reliability issues. <a href="https://tritsystem.github.io/bitsandbytes-4bit-memory-safety/">Write-up</a>, <a href="https://github.com/bitsandbytes-foundation/bitsandbytes/pull/2105">#2105</a>, <a href="https://github.com/bitsandbytes-foundation/bitsandbytes/pull/2107">#2107</a>. The write-up measures the severity instead of assuming it: the write overrun is capped at 7 bytes, and a canary was never modified in 800 trials.</li>
+<li>A NULL dereference on allocation failure in mosquitto's control tool (<a href="https://github.com/eclipse-mosquitto/mosquitto/pull/3762">#3762</a>); an etcd lease checkpointer that reports success after a failed write (<a href="https://github.com/etcd-io/etcd/pull/22650">#22650</a>); SQL parameter binding in chia-blockchain (<a href="https://github.com/Chia-Network/chia-blockchain/pull/21419">#21419</a>, not currently reachable).</li>
+</ul>
+
+<h2 id="systems">Low-level systems</h2>
+<div class="cards">
+<div class="card"><h3><a href="https://github.com/tritsystem/spikeling-os">spikeling-os</a> <span class="tag">Rust · active</span></h3>
+<p>A from-scratch x86_64 kernel with its own filesystem, ELF loader, processes and a subset-C compiler that runs inside it, built one verified milestone at a time. Each milestone has two QEMU boots and self-tests whose expected values are worked out by hand.</p>
+<p class="small">Differential fuzzing of the in-kernel compiler found and fixed real silent miscompiles: integer literals of 2<sup>32</sup> or more truncated to 32 bits, case labels outside the 32-bit range compared by their low 32 bits, and a <code>continue</code> inside a switch inside a loop dropped since Milestone 91. The last one was found only after the fuzz started reporting how often it generated each combination of constructs. Its first run had produced that combination 0 times in 800 programs.</p></div>
+<div class="card"><h3>Native seam audit <span class="tag">procedure</span></h3>
+<p>A procedure for auditing the native boundary of ML libraries, where Python hands buffers to C, C++ and CUDA. Before any tool is trusted, it's validated on a planted bug and a clean control: 9 sanitizer and fuzzer configurations, including four compute-sanitizer tools on an RTX 5060.</p>
+<p class="small">It records blind spots instead of hiding them: synccheck didn't flag a divergent <code>__syncthreads</code> on sm_120, and the first tool inventory wrongly said valgrind was installed, which only the planted bug exposed. <a href="https://github.com/tritsystem/ml-security-curriculum/tree/main/Native%20Seam%20Audit">Procedure</a></p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/pytest-numba-cache">pytest-numba-cache</a> <span class="tag">Python · finished</span></h3>
+<p>A pytest plugin that gives each parallel worker its own numba cache, fixing a cache-write race. Measured: crashes in 8 of 10 rounds without it and 0 of 10 with it, and 76 of 160 librosa processes crashed on a shared cache versus 0 with separate ones. Measured on Windows only.</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/baton">baton</a> <span class="tag">Python · active</span></h3>
+<p>Three LoRA adapters sharing one frozen model, each with its own pre-filled KV cache. Hardening found a cache-position bug where re-warming left every later write outside the attention mask, ending in a CUDA device-side assert. The fix raises before any GPU write, and a mutation check proves the test catches it.</p></div>
+</div>
+
+<h2 id="research">ML research</h2>
+<p>The ML research is where I learned to measure: pre-registered studies of spiking neural networks, ternary weights and physical reservoirs. Most of the results are bounded or negative, and they're reported that way.</p>
+<div class="cards">
+<div class="card"><h3><a href="https://github.com/tritsystem/Spikeling">Spikeling</a> <span class="tag">Python/C · active</span></h3>
+<p>A language and runtime for spiking neural networks: one <code>.spk</code> file runs on Python, C, Verilog and GDScript backends.</p>
+<p class="small">Measured both ways. Event-driven execution was 16–29× faster at 5% activity but 0.92× at 100%. The resonator neuron beat a naive threshold but <span class="neg">not Goertzel or FFT</span>, and SNN scheduling was <span class="neg">falsified as a differentiator</span> (identical to greedy graph colouring).</p></div>
+<div class="card"><h3>Heterogeneous neuron ensembles <span class="tag">study line</span></h3>
+<p>Do mixed neuron types detect more kinds of anomaly than one type? In Python, a mixed ensemble scored 60/60 versus 30/60 for all-LIF (<a href="https://github.com/tritsystem/heterogeneous-neuron-ontology">heterogeneous-neuron-ontology</a>).</p>
+<p class="small">The kernel port went through a full retraction: the original 16/16 result was a false positive, because its thresholds were calibrated on too few quiet windows. After that was fixed it was an honest negative (12 vs 12). A properly configured, frequency-corrected resonator then gave a measured 29/32 versus 12/32 for all-LIF, with 1/32 false positives on held-out quiet data (spikeling-os Milestones 165–175).</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/012-trit-search">Ternary weights and OBSERVE</a> <span class="tag">Python · active</span></h3>
+<p>Ternary research that produced OBSERVE, a local semantic code search tool. Ternary weights gave 20× compression but <span class="neg">cost 7.35 points of accuracy</span>, against INT8's 0.19-point gain. So the search API serves float32, because ternary changed the top result 40% of the time.</p>
+<p class="small">OBSERVE used 66% fewer tokens on its own benchmark, but grep beats it (5/5 vs 3/5) when you know the identifier. The hosted API (<a href="https://github.com/tritsystem/observe-api">observe-api</a>) is code-complete but not currently deployed.</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/methodlm">methodlm</a> <span class="tag">Python · active</span></h3>
+<p>A causal-reasoning harness that makes a model back causal claims with real tests and a checkable ledger. Its backdoor-adjustment test cut false causal claims from 100% to about 1% while keeping the true cause. Its value depends on the model's capability, and it says so.</p></div>
+<div class="card"><h3>Physical reservoirs <span class="tag">simulation studies</span></h3>
+<p><a href="https://github.com/tritsystem/topological-phononics">topological-phononics</a> (<a href="https://doi.org/10.5281/zenodo.21305151">Zenodo preprint</a>): topological structure protects a reservoir against a dead element exactly when chiral symmetry holds, and <span class="neg">the idealized ~5× does not transfer to a realistic device</span>.</p>
+<p class="small"><a href="https://github.com/tritsystem/quasicrystal-mems-reservoir">quasicrystal-mems-reservoir</a>: a symmetry selection rule confirmed on finite-element modes to 1 part in 10<sup>9</sup>, with a bounded advantage. The "richer structure computes better" intuition was <span class="neg">disproven</span>.</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/silicon-mega-accelerator">silicon-mega-accelerator</a> and <a href="https://github.com/tritsystem/spikegate">spikegate</a> <span class="tag">finished</span></h3>
+<p class="small">Accelerator techniques applied to Spikeling: a bit-exact 25.6× speedup from sparse indexing, while a lookup-table exp() was <span class="neg">1.56× slower</span> than <code>math.exp</code>. spikegate's spike-gated routing <span class="neg">lost to an if/elif cascade by ~21×</span> on decision speed, and its README says so first.</p></div>
+</div>
+
+<h2 id="tools">Tools I built for the hunt</h2>
+<div class="cards">
+<div class="card"><h3><a href="https://github.com/tritsystem/reagent">reagent</a></h3><p class="small">A two-stage bug assay: 40 detectors (32 Python, 8 C) nominate code from AST patterns, then <code>confirm()</code> imports and probes the code. Each detector has a synthetic ground-truth benchmark. Most sweeps of new repos end with zero real findings after triage, and that's reported.</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/crawlspike">crawlspike</a></h3><p class="small">A static crawler for "one path honors a flag, its sibling drops it". It found a known bug from Spikeling that ruff, semgrep and pylint all miss. On real OSS its first runs found <span class="neg">5 bugs in itself and 0 in the targets</span>.</p></div>
+<div class="card"><h3><a href="https://github.com/tritsystem/sec-portfolio">sec-portfolio pipeline</a></h3><p class="small">The track-record site is regenerated from the real merged diffs, with no model in the loop, so it can't hallucinate a fix.</p></div>
+<div class="card"><h3>mcp-gateway <span class="tag">private</span></h3><p class="small">A tamper-evident, hash-chained audit log and rate limiter for local agent tool servers, imported by OBSERVE's and Spikeling's MCP servers.</p></div>
+</div>
+
+<h2 id="learning">How I learn</h2>
+<h3>The method</h3>
+<p>Everything above runs on one written discipline, <a href="https://github.com/tritsystem/research-portfolio/blob/main/METHOD.md">the Method</a>, which opens: <em>"A result is worth exactly as much as the test that could have broken it and didn't."</em> In practice:</p>
+<ul>
+<li><strong>Measure, don't infer.</strong> Reading code is a hypothesis about what it does. Run it.</li>
+<li><strong>Validate the instrument first.</strong> Every new harness gets a planted case it must fail before its zero is trusted.</li>
+<li><strong>Pre-register the verdict</strong>, success and failure both, before looking at the result.</li>
+<li><strong>Report the worst slice, not the average</strong>, and ask what the laziest trick would score.</li>
+<li><strong>Find the exact edge of every rule:</strong> state results as "A beats B exactly when C holds".</li>
+<li><strong>A documented no is a result</strong>, and overclaims are retracted by name, in writing.</li>
+</ul>
+
+<h3>The evidence ladder</h3>
+<p>Every finding states the tier it reached, and I never round up. A finding needs at least T3, and I file at T4.</p>
+<div class="ladder">
+<div class="t">T0</div><div>A static detector or grep hit. A lead.</div>
+<div class="t">T1</div><div>Code read by hand and reasoned through, nothing run. A lead.</div>
+<div class="t">T2</div><div>The real function run, but outside its real caller. Still a lead, never called confirmed.</div>
+<div class="t bar">T3</div><div class="bar">Reproduced through the real target's real input path. <strong>The minimum to call it a finding.</strong></div>
+<div class="t bar">T4</div><div class="bar">T3, plus a fix that flips the same reproduction from red to green, with the project's own tests still passing.</div>
+<div class="t">T5</div><div>T4, plus a stated search of sibling code for the same root cause, every candidate resolved, and a guard for the whole bug class.</div>
+</div>
+
+<h3>What I study with</h3>
+<div class="cards">
+<div class="card"><h3><a href="https://github.com/tritsystem/ml-security-curriculum">ML security curriculum</a></h3><p class="small">A reading curriculum for low-level ML systems security: systems and exploitation, fuzzing and sanitizers, GPUs and CUDA, framework internals, serialization and supply chain, adversarial ML and LLM security, and disclosure. It has 262 links checked live, about 24,650 hours of <em>estimated</em> reading in total (an index, not hours already studied), an 8-hour course, worked threat models, the native seam audit, and a pre-registered containment study, whose <span class="neg">design didn't hold up</span>: its apparent 97% containment was cluster collapse.</p></div>
+<div class="card"><h3><a href="https://tritsystem.github.io/ml-memory-ladder/">ML memory ladder</a></h3><p class="small">8 levels and 16 executable C++ and Python labs on ML memory allocation, CUDA caching-allocator and stream-lifetime bugs, and KV-cache state, with 64 spaced-repetition questions. Each level is built on a real bug I fixed, such as DeepSpeed #8565 and cfengine #6358.</p></div>
+<div class="card"><h3><a href="https://tritsystem.github.io/ml-ladder/">ML ladder</a></h3><p class="small">A 16-level interactive ML course, from "what ML is" through research rigor to production evaluation and design.</p></div>
+<div class="card"><h3><a href="https://tritsystem.github.io/the-playbook/">The playbook</a></h3><p class="small">A from-scratch walkthrough of the research repos in 25 chapters with 49 questions, built to defend the work under questioning. Its closing chapter records <span class="neg">a grand unification that failed</span>, measured against each substrate's real code.</p></div>
+</div>
+
+<h3>Memory: logging every result, negatives included</h3>
+<p>Every piece of work is logged the same day in a private research vault, with 575 work notes and 120 lessons as of 2026-11-04. Reusable mistakes become lessons, and lessons become numbered rules. A small search tool (mastermind) checks those rules before any outward action, such as a filing, a comment or a push. Example lesson titles: <em>a finding counts only when execution-verified, reproducible and fixable</em>; <em>use an fp64 control before calling a numerical violation a bug</em>; <em>print the imported module path before trusting a harness</em>; <em>a mean-plus-k-sigma threshold from few windows can be vacuous</em>.</p>
+
+<h3>Catching my own mistakes</h3>
+<ul>
+<li><strong>A long-reported pass was retracted.</strong> A held-out control showed a 16/16 result was a false positive: one detector fired identically on every input. The fix's own first gate also failed, and it stays on record.</li>
+<li><strong>A clean fuzz meant nothing for constructs it never generated.</strong> Measuring coverage per construct combination exposed a gap, and closing it found a miscompile that had been present for 75 milestones.</li>
+<li><strong>The hypothesis held for a different reason than predicted.</strong> The predicted mechanism missed, an off-kernel replay of the exact update rule diagnosed why, and the correction was tested as a new pre-registered experiment instead of patched in after the fact.</li>
+<li><strong>A tool inventory was wrong, and only a planted bug showed it.</strong></li>
+</ul>
+
+<h2 id="map">How it fits together</h2>
+<p>Each line is a link a repository or document actually shows, such as an import, a vendored module or a cross-reference. Hover over or focus a box to see its links. The full list, with sources, is under the map.</p>
+<div class="legend" aria-hidden="true">
+<span style="--c:var(--g-learn)">Learn</span><span style="--c:var(--g-method)">Method</span><span style="--c:var(--g-tools)">Tools</span><span style="--c:var(--g-find)">Findings</span><span style="--c:var(--g-research)">Research</span>
+</div>
+<svg id="fitmap" viewBox="0 0 1000 620" role="img" aria-labelledby="mapTitle">
+<title id="mapTitle">How the learning material, method, tools, findings and research connect</title>
+<g id="edges"></g><g id="nodes"></g>
+</svg>
+<div id="maptip" aria-live="polite" class="muted">Hover over or focus a box to see how it connects.</div>
+<details><summary>All connections, as a list</summary><table id="edgetable"><tr><th>From</th><th>To</th><th>How (and where it's shown)</th></tr></table></details>
 
 <footer>
-  <div class="wrap prose">
-    <h2>The through-line</h2>
-    <p>
-      It runs one way, end to end: a game &rarr; a gardening question about copper rods
-      and whether <em>shape</em> matters &rarr; topology &rarr; two engines that test when
-      structure and symmetry actually <em>help</em> a system compute &rarr; every repo in
-      the <a href="#lineage" style="color:var(--ember-bright)">lineage map</a>. Nothing here
-      is a stack of side projects. The same <code>.spk</code> brain drives two games and a
-      kernel scheduler; the same measurement discipline &mdash; measure it, verify it, report
-      what happened, negatives included &mdash; carries all the way to software people can
-      pay for and depend on, and into other people&rsquo;s libraries as upstream fixes.
-    </p>
-    <a class="big" href="https://github.com/tritsystem">github.com/tritsystem &rarr;</a>
-    <a class="big" href="mailto:gbranaa4@gmail.com" style="margin-left:22px">gbranaa4@gmail.com &rarr;</a>
-    <p class="disclaimer">
-      <strong>AI use.</strong> This work is done with AI assistance &mdash; primarily Claude
-      (Anthropic), via Claude Code &mdash; as a pair-programmer and research assistant across
-      code, experiments, analysis and writing. The research is human-directed: I choose the
-      questions and hypotheses, pre-register every test before seeing the outcome, run and can
-      reproduce every number (nothing here is AI-estimated), review and own every line of code
-      and prose, and report negatives and boundaries the same way as the wins. Upstream bug
-      fixes disclose AI assistance per each project&rsquo;s policy and are only filed once I
-      have reproduced them myself. Anything that looks machine-generated and wrong is my
-      responsibility &mdash; open an issue.
-    </p>
-    <p class="disclaimer">
-      Commit counts and dates read from the repositories on 2026-09-01; &ldquo;~600 commits&rdquo; is the
-      sum across the 27 repositories listed. Upstream, status re-checked live via
-      <code>gh pr view</code>/<code>gh issue view</code> on 2026-09-06: six merged pull requests I
-      authored (spikingjelly&nbsp;#743, #744, #750, kornia&nbsp;#4210, #4299, #4303). Separately, three bugs I
-      reported were fixed and merged upstream by other contributors, not by a PR of mine: SciPy
-      (issue&nbsp;#26095, fixed via PR&nbsp;#26097), aiohttp (issue&nbsp;#13634, fixed via
-      PR&nbsp;#13637), and Pillow (issue&nbsp;#9963, fixed via PR&nbsp;#9964). &ldquo;Merged&rdquo;
-      on this page always means a merged pull request authored by me. Full per-finding record and
-      live status: <a href="oss/">/oss</a>.
-    </p>
-  </div>
+<p>Figures as of 2026-11-04. PR counts come from a dated GitHub snapshot of every PR I've authored, re-verified live; only merged PRs are counted. Findings that are unpublished or still under coordinated disclosure are deliberately left off this page. I use an AI coding assistant heavily for reproducing, testing and drafting, and every claim here was checked against the public record.</p>
 </footer>
+</main>
 
 <script>
-(function(){
-  var c = document.getElementById('raster');
-  if(!c) return;
-  var ctx = c.getContext('2d');
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var W, H, lines, reduce = false;
-  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
-
-  function accent(){
-    try { return getComputedStyle(document.documentElement).getPropertyValue('--ember').trim() || '#ff7518'; }
-    catch(e){ return '#ff7518'; }
-  }
-
-  function resize(){
-    W = c.clientWidth; H = c.clientHeight;
-    c.width = W * dpr; c.height = H * dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    var n = Math.max(5, Math.round(H/44));
-    lines = [];
-    for(var i=0;i<n;i++){
-      lines.push({ y: (i+0.5)*(H/n), spikes: [], rate: 0.006 + Math.random()*0.02 });
-    }
-  }
-
-  function frame(t){
-    ctx.clearRect(0,0,W,H);
-    var col = accent();
-    // baselines
-    ctx.strokeStyle = col; ctx.globalAlpha = 0.10; ctx.lineWidth = 1;
-    for(var i=0;i<lines.length;i++){
-      ctx.beginPath(); ctx.moveTo(0, lines[i].y); ctx.lineTo(W, lines[i].y); ctx.stroke();
-    }
-    // spikes
-    for(var i=0;i<lines.length;i++){
-      var L = lines[i];
-      if(Math.random() < L.rate) L.spikes.push({ x: W + 6, life: 1 });
-      for(var s=L.spikes.length-1;s>=0;s--){
-        var sp = L.spikes[s];
-        sp.x -= 0.9;
-        if(sp.x < -6){ L.spikes.splice(s,1); continue; }
-        ctx.globalAlpha = 0.55 * sp.life;
-        ctx.strokeStyle = col; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.moveTo(sp.x, L.y - 9); ctx.lineTo(sp.x, L.y + 9); ctx.stroke();
-        ctx.globalAlpha = 0.9 * sp.life;
-        ctx.fillStyle = col;
-        ctx.fillRect(sp.x - 1, L.y - 1, 2, 2);
-      }
-    }
-    ctx.globalAlpha = 1;
-    if(!reduce) raf = requestAnimationFrame(frame);
-  }
-
-  var raf;
-  function start(){
-    resize();
-    if(raf) cancelAnimationFrame(raf);
-    if(reduce){
-      // one static scattered frame
-      for(var k=0;k<lines.length;k++){
-        var m = 3 + Math.floor(Math.random()*5);
-        for(var j=0;j<m;j++) lines[k].spikes.push({ x: Math.random()*W, life: 1 });
-      }
-      frame(0);
-    } else {
-      raf = requestAnimationFrame(frame);
-    }
-  }
-  window.addEventListener('resize', function(){ clearTimeout(window.__rt); window.__rt = setTimeout(start, 150); });
-  start();
-})();
+const G={learn:"--g-learn",method:"--g-method",tools:"--g-tools",find:"--g-find",research:"--g-research"};
+const W=172,H=34;
+const nodes=[
+ {id:"curr",g:"learn",x:100,y:70,t:"ML security curriculum",u:"https://github.com/tritsystem/ml-security-curriculum"},
+ {id:"mlad",g:"learn",x:100,y:140,t:"ML ladder",u:"https://tritsystem.github.io/ml-ladder/"},
+ {id:"mmem",g:"learn",x:100,y:210,t:"ML memory ladder",u:"https://tritsystem.github.io/ml-memory-ladder/"},
+ {id:"play",g:"learn",x:100,y:280,t:"The playbook",u:"https://tritsystem.github.io/the-playbook/"},
+ {id:"meth",g:"method",x:330,y:90,t:"The Method",u:"https://github.com/tritsystem/research-portfolio/blob/main/METHOD.md"},
+ {id:"ladr",g:"method",x:330,y:175,t:"Evidence ladder T0–T5",u:"#learning"},
+ {id:"vault",g:"method",x:330,y:260,t:"Vault + mastermind",u:"#learning"},
+ {id:"reag",g:"tools",x:560,y:70,t:"reagent",u:"https://github.com/tritsystem/reagent"},
+ {id:"crawl",g:"tools",x:560,y:135,t:"crawlspike",u:"https://github.com/tritsystem/crawlspike"},
+ {id:"seam",g:"tools",x:560,y:200,t:"Native seam audit",u:"https://github.com/tritsystem/ml-security-curriculum/tree/main/Native%20Seam%20Audit"},
+ {id:"mcpg",g:"tools",x:560,y:265,t:"mcp-gateway (private)",u:"#tools"},
+ {id:"secp",g:"tools",x:560,y:330,t:"sec-portfolio pipeline",u:"https://github.com/tritsystem/sec-portfolio"},
+ {id:"merg",g:"find",x:800,y:90,t:"35 merged fixes",u:"https://tritsystem.github.io/sec-portfolio/"},
+ {id:"adv",g:"find",x:800,y:165,t:"PyJWT advisory",u:"https://github.com/advisories/GHSA-gvp8-978c-rx2q"},
+ {id:"rep",g:"find",x:800,y:240,t:"7 reports fixed upstream",u:"#security"},
+ {id:"bnb",g:"find",x:800,y:315,t:"bitsandbytes OOB (open)",u:"https://tritsystem.github.io/bitsandbytes-4bit-memory-safety/"},
+ {id:"spk",g:"research",x:130,y:470,t:"Spikeling",u:"https://github.com/tritsystem/Spikeling"},
+ {id:"sos",g:"research",x:360,y:470,t:"spikeling-os",u:"https://github.com/tritsystem/spikeling-os"},
+ {id:"onto",g:"research",x:360,y:545,t:"Heterogeneous neurons",u:"https://github.com/tritsystem/heterogeneous-neuron-ontology"},
+ {id:"obs",g:"research",x:590,y:470,t:"OBSERVE / ternary",u:"https://github.com/tritsystem/012-trit-search"},
+ {id:"bat",g:"research",x:590,y:545,t:"baton",u:"https://github.com/tritsystem/baton"},
+ {id:"mlm",g:"research",x:820,y:470,t:"methodlm",u:"https://github.com/tritsystem/methodlm"},
+ {id:"res",g:"research",x:820,y:545,t:"Physical reservoirs",u:"https://github.com/tritsystem/topological-phononics"}
+];
+const edges=[
+ ["ladr","curr","The 8-hour course's Module 1 teaches the tiers and \"never round up\" (ML_Security_8h_Power_Course.md)"],
+ ["ladr","seam","Step 6 of the seam-audit procedure is \"climb the tiers\" (Native_Seam_Audit_Procedure.md)"],
+ ["seam","curr","The seam-audit procedure and its tool validation live in the curriculum repo"],
+ ["meth","ladr","The ladder is rule F-1 of the same rulebook that numbers the Method's rules"],
+ ["meth","vault","The vault (private) and mastermind (private): the vault's home page names the Method its operating discipline"],
+ ["vault","sos","A vault lesson set the resonator design in Milestone 173; Milestones 165 and 175 produced new lessons"],
+ ["merg","mmem","Each memory-ladder level is built on a real fix (DeepSpeed #8565, cfengine #6358)"],
+ ["mlad","mmem","Sibling course with the same shape (ml-memory-ladder README)"],
+ ["mlad","play","The ladder is a lab page inside the playbook (the-playbook/lab/ml-ladder.html)"],
+ ["play","spk","The playbook teaches the research repos from scratch, starting with Spikeling's LIF neuron"],
+ ["reag","merg","reagent's track record lists merged kornia, celery, SpikingJelly and ultralytics fixes"],
+ ["secp","merg","The deep-dive is generated from the real merged diffs, with no model"],
+ ["crawl","spk","crawlspike's origin bug and ground-truth benchmark come from Spikeling"],
+ ["spk","sos","Spikeling's runtime, ported into the kernel as its control logic"],
+ ["onto","sos","Milestone 77 applied this study to kernel disk I/O; Milestone 165 retracted it; Milestone 175 is the measured replacement"],
+ ["obs","mlm","Sibling projects sharing the tritkit layer (methodlm README)"],
+ ["mcpg","obs","Imported by OBSERVE's MCP server (trit_mcp_server.py)"],
+ ["mcpg","spk","Imported by Spikeling's MCP server (mcp_server.py)"],
+ ["res","mlm","topological-phononics cross-references methodlm"]
+];
+const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+const svgNS="http://www.w3.org/2000/svg",E=document.getElementById("edges"),N=document.getElementById("nodes");
+const lanes=[["Learn",100],["Method",330],["Tools",560],["Findings",800]];
+for(const [t,x] of lanes){const l=document.createElementNS(svgNS,"text");l.setAttribute("x",x-W/2);l.setAttribute("y",34);l.setAttribute("class","lane");l.textContent=t;N.appendChild(l)}
+{const l=document.createElementNS(svgNS,"text");l.setAttribute("x",44);l.setAttribute("y",425);l.setAttribute("class","lane");l.textContent="Research";N.appendChild(l)}
+function anchor(a,b){ // point on a's box edge toward b
+ const dx=b.x-a.x,dy=b.y-a.y,sx=Math.abs(dx)/(W/2),sy=Math.abs(dy)/(H/2),s=Math.max(sx,sy)||1;return [a.x+dx/s,a.y+dy/s]}
+const edgeEls=[];
+for(const [f,t,how] of edges){const a=byId[f],b=byId[t];const [x1,y1]=anchor(a,b),[x2,y2]=anchor(b,a);
+ const p=document.createElementNS(svgNS,"path");const mx=(x1+x2)/2;
+ p.setAttribute("d",`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);p.setAttribute("class","edge");E.appendChild(p);edgeEls.push({f,t,how,p});
+ const row=document.createElement("tr");row.innerHTML=`<td>${a.t}</td><td>${b.t}</td><td>${how}</td>`;document.getElementById("edgetable").appendChild(row)}
+const tip=document.getElementById("maptip");
+function show(id,on){for(const e of edgeEls){e.p.classList.toggle("hi",on&&(e.f===id||e.t===id))}
+ for(const el of N.querySelectorAll(".node"))el.classList.toggle("hi",on&&el.dataset.id===id);
+ if(!on){tip.textContent="Hover over or focus a box to see how it connects.";tip.className="muted";return}
+ const n=byId[id],mine=edgeEls.filter(e=>e.f===id||e.t===id);tip.className="";
+ tip.innerHTML=`<strong>${n.t}</strong> · ${mine.length?mine.map(e=>`${byId[e.f===id?e.t:e.f].t}: ${e.how}`).join("<br>"):"no sourced links to other boxes"}`}
+for(const n of nodes){const g=document.createElementNS(svgNS,"g");g.setAttribute("class","node");g.dataset.id=n.id;g.setAttribute("tabindex","0");g.setAttribute("role","link");g.setAttribute("aria-label",`${n.t}, ${n.g==="find"?"findings":n.g}`);
+ g.innerHTML=`<rect class="box" x="${n.x-W/2}" y="${n.y-H/2}" width="${W}" height="${H}" rx="6"></rect><rect class="stripe" x="${n.x-W/2}" y="${n.y-H/2}" width="6" height="${H}" rx="3" style="fill:var(${G[n.g]})"></rect><text x="${n.x-W/2+14}" y="${n.y+4.5}">${n.t}</text>`;
+ g.addEventListener("mouseenter",()=>show(n.id,true));g.addEventListener("mouseleave",()=>show(n.id,false));
+ g.addEventListener("focus",()=>show(n.id,true));g.addEventListener("blur",()=>show(n.id,false));
+ g.addEventListener("click",()=>{location.href=n.u});g.addEventListener("keydown",ev=>{if(ev.key==="Enter")location.href=n.u});
+ N.appendChild(g)}
 </script>
+</body>
+</html>
