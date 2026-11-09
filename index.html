@@ -71,23 +71,24 @@ footer{margin-top:60px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 </header>
 
 <h2 id="record">The record at a glance</h2>
-<p class="small muted">From a full GitHub snapshot of every pull request I've authored, taken 2026-11-04, counting only other people's repositories (98 PRs across 54 repositories).</p>
+<p class="small muted">From a full GitHub snapshot of every pull request I've authored, taken 2026-11-09, counting only other people's repositories (104 PRs across 58 repositories).</p>
 <div class="tiles">
-<div class="tile"><div class="n">35</div><div class="l">merged fixes and features, across 16 projects</div></div>
-<div class="tile"><div class="n">71%</div><div class="l">of decided PRs merged (35 of 49; 95% interval 58–82%)</div></div>
-<div class="tile"><div class="n">3.4 days</div><div class="l">median from opening to merge (quartiles 1.0 and 8.7)</div></div>
-<div class="tile"><div class="n">1</div><div class="l">published security advisory (PyJWT, CVE-2026-103001)</div></div>
+<div class="tile"><div class="n">38</div><div class="l">merged fixes and features, across 18 projects</div></div>
+<div class="tile"><div class="n">73%</div><div class="l">of decided PRs merged (38 of 52; 95% interval 60–83%)</div></div>
+<div class="tile"><div class="n">3.7 days</div><div class="l">median from opening to merge (quartiles 1.1 and 7.7)</div></div>
+<div class="tile"><div class="n">2</div><div class="l">published security advisories (<a href="#security">h5io, PyJWT</a>)</div></div>
 <div class="tile"><div class="n">7</div><div class="l">bugs I reported that maintainers then fixed</div></div>
 </div>
-<p class="small">Read the denominator: 49 of the 98 are still open, and I count them as undecided, not as failures. Sixteen maintainers did all 35 merges, and four of them did 21, so this record says as much about those projects' responsiveness as about my patches. Of the 14 closed without merging, 8 were superseded by another fix for the same bug, 3 closed for policy or process reasons (one was my own sign-off mistake), 2 weren't wanted in that form, and none was rejected because the fix was wrong. One closed PR's commits were still merged, cherry-picked under my name into the maintainer's own PR (open_clip #1231); I don't count it.</p>
+<p class="small">Read the denominator: 52 of the 104 are still open, and I count them as undecided, not as failures. Sixteen maintainers did all 38 merges, and four of them did 21, so this record says as much about those projects' responsiveness as about my patches. Of the 14 closed without merging, 8 were superseded by another fix for the same bug, 3 closed for policy or process reasons (one was my own sign-off mistake), 2 weren't wanted in that form, and none was rejected because the fix was wrong. One closed PR's commits were still merged, cherry-picked under my name into the maintainer's own PR (open_clip #1231); I don't count it.</p>
 
 <h2 id="security">Security and correctness work</h2>
 <p>The work splits into the native and systems layer, where bugs are memory-safety and isolation problems, and the ML layer, where they are silent numerical errors that change a model's output without crashing anything.</p>
 
-<h3>Published advisory</h3>
+<h3>Published advisories</h3>
 <table>
 <tr><th>Advisory</th><th>Package</th><th>What</th></tr>
-<tr><td><a href="https://github.com/advisories/GHSA-gvp8-978c-rx2q">GHSA-gvp8-978c-rx2q</a><br><span class="small muted">CVE-2026-103001</span></td><td>PyJWT 2.11.0–2.13.0</td><td><code>PyJWT.decode()</code> mutated the caller's <code>options</code> dict, so a reused dict could silently switch off claim verification. Medium severity, CVSS 6.5, CWE-471. Published 2026-09-30, credited to me as reporter.</td></tr>
+<tr><td><a href="https://github.com/h5io/h5io/security/advisories/GHSA-vwvw-f6v4-w737">GHSA-vwvw-f6v4-w737</a><br><span class="small muted"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-120499">CVE-2026-120499</a></span></td><td>h5io ≤ 0.2.5</td><td><code>h5io.read_hdf5()</code> rebuilt objects from a crafted file — <code>eval</code> on a <code>timezone</code> node, <code>import_module</code> on a <code>class</code> node, and pandas unpickling — so opening an untrusted <code>.h5</code> ran code, including through MNE-Python readers. High severity, CVSS 7.8 (v3.1) / 8.5 (v4.0), CWE-95 + CWE-502. Published 2026-11-05, credited to me as a finder alongside <a href="https://github.com/r3vpwnx">r3vpwnx</a>; fixed in 0.2.6.</td></tr>
+<tr><td><a href="https://github.com/advisories/GHSA-gvp8-978c-rx2q">GHSA-gvp8-978c-rx2q</a><br><span class="small muted"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-103001">CVE-2026-103001</a></span></td><td>PyJWT 2.11.0–2.13.0</td><td><code>PyJWT.decode()</code> mutated the caller's <code>options</code> dict, so a reused dict could silently switch off claim verification. Medium severity, CVSS 6.5, CWE-471. Published 2026-09-30, credited to me as reporter.</td></tr>
 </table>
 
 <h3>Merged fixes, by bug class</h3>
@@ -104,7 +105,7 @@ footer{margin-top:60px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 <tr><td>Logic, geometry and validation</td><td class="num">5</td><td>a group-size check that skipped narrow layers (<a href="https://github.com/vllm-project/llm-compressor/pull/3252">llm-compressor #3252</a>), image-processor handling in transformers (<a href="https://github.com/huggingface/transformers/pull/49767">#49767</a>), kornia (2), snntorch (1)</td></tr>
 <tr><td>Features (not bug fixes)</td><td class="num">4</td><td>snntorch synaptic delay, homeostasis and an equation-to-neuron generator; a resonate-and-fire neuron for SpikingJelly</td></tr>
 </table>
-<p class="small muted">The class labels are my own (from the <a href="https://tritsystem.github.io/sec-portfolio/">track-record site's</a> classifier). Apart from PyJWT, no maintainer or CVE has given any of these a security designation.</p>
+<p class="small muted">The class labels are my own (from the <a href="https://tritsystem.github.io/sec-portfolio/">track-record site's</a> classifier). Apart from the two advisories above, no maintainer or CVE has given any fix below a security designation.</p>
 
 <h3>In review (open, not counted)</h3>
 <ul class="small">
@@ -230,8 +231,8 @@ const nodes=[
  {id:"seam",g:"tools",x:560,y:200,t:"Native seam audit",u:"https://github.com/tritsystem/ml-security-curriculum/tree/main/Native%20Seam%20Audit"},
  {id:"mcpg",g:"tools",x:560,y:265,t:"mcp-gateway (private)",u:"#tools"},
  {id:"secp",g:"tools",x:560,y:330,t:"sec-portfolio pipeline",u:"https://github.com/tritsystem/sec-portfolio"},
- {id:"merg",g:"find",x:800,y:90,t:"35 merged fixes",u:"https://tritsystem.github.io/sec-portfolio/"},
- {id:"adv",g:"find",x:800,y:165,t:"PyJWT advisory",u:"https://github.com/advisories/GHSA-gvp8-978c-rx2q"},
+ {id:"merg",g:"find",x:800,y:90,t:"38 merged fixes",u:"https://tritsystem.github.io/sec-portfolio/"},
+ {id:"adv",g:"find",x:800,y:165,t:"2 advisories (h5io, PyJWT)",u:"#security"},
  {id:"rep",g:"find",x:800,y:240,t:"7 reports fixed upstream",u:"#security"},
  {id:"bnb",g:"find",x:800,y:315,t:"bitsandbytes OOB (open)",u:"https://tritsystem.github.io/bitsandbytes-4bit-memory-safety/"},
  {id:"spk",g:"research",x:130,y:470,t:"Spikeling",u:"https://github.com/tritsystem/Spikeling"},
